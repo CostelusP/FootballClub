@@ -2,7 +2,7 @@ import './App.css'
 import styled from 'styled-components'
 import { Authentication } from './components/auth/index'
 import imageLogin from './assets/images/loginImage.jpg'
-
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 const AppContainer = styled.div`
 	width: 100%;
 	height: 100%;
@@ -16,9 +16,13 @@ const AppContainer = styled.div`
 
 function App() {
 	return (
-		<AppContainer>
-			<Authentication />
-		</AppContainer>
+		<Router>
+			<AppContainer>
+				<Switch>
+					<Route path='/auth' component={Authentication} exact />
+				</Switch>
+			</AppContainer>
+		</Router>
 	)
 }
 

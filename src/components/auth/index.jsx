@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { LoginForm } from './login/loginForm'
-import { AccountContext } from './accountContext'
+import { AccountContext } from './context'
 import { SignUpForm } from './signUp/signUp'
 import { backdropVariants, expandingTransition } from '../../common/constants'
 import {
@@ -17,28 +17,36 @@ export function Authentication(props) {
 	const [isExpanded, setExpanded] = useState(false)
 	const [active, setActive] = useState('signin')
 
-	const playExpandingAnimation = () => {
+	const playExpandingEffect = () => {
 		setExpanded(true)
+		/*
+		  Collapse it after short amount of time
+		  To Finish transition 
+		*/
 		setTimeout(() => {
 			setExpanded(false)
 		}, expandingTransition.duration * 1000 - 1500)
 	}
 
+	const switchActive = (active) => {
+		setTimeout(() => setActive(active), 400)
+	}
+
 	const switchToSignup = () => {
-		playExpandingAnimation()
-		setTimeout(() => {
-			setActive('signup')
-		}, 400)
+		playExpandingEffect()
+		switchActive('signup')
 	}
 
 	const switchToSignin = () => {
-		playExpandingAnimation()
-		setTimeout(() => {
-			setActive('signin')
-		}, 400)
+		playExpandingEffect()
+		switchActive('signin')
 	}
 
-	const contextValue = { switchToSignup, switchToSignin }
+	const contextValue = {
+		switchToSignup,
+		switchToSignin,
+		playExpandingEffect,
+	}
 
 	return (
 		<AccountContext.Provider value={contextValue}>
