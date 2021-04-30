@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url */
 import { useFormik } from 'formik'
 import React, { useContext, useState } from 'react'
 import { Marginer } from '../marginer'
@@ -25,9 +26,10 @@ export function SignUpForm(props) {
 	const onSubmit = async (values) => {
 		const { confirmPassword, ...data } = values
 		const response = await axios
-			.post('http://localhost:3000/user/createUser', data)
+			.post('http://localhost:3100/users/createUser', data)
 			.catch((err) => {
 				if (err && err.response) setError(err.response.data.message)
+				console.error(err)
 				setSuccess(null)
 			})
 
@@ -35,13 +37,16 @@ export function SignUpForm(props) {
 			setError(null)
 			setSuccess(response.data.message)
 			formik.resetForm()
+			setTimeout(() => {
+				switchToSignin()
+			}, 2000)
 		}
 	}
 
 	const formik = useFormik({
 		initialValues: {
-			fullName: '',
-			email: '',
+			user_name: '',
+			email_address: '',
 			password: '',
 			confirmPassword: '',
 		},
@@ -50,8 +55,6 @@ export function SignUpForm(props) {
 		validationSchema: validationRegisterSchema,
 	})
 
-	console.log('Error', error)
-
 	return (
 		<BoxContainer>
 			{!error && <FormSuccess>{success ? success : ''}</FormSuccess>}
@@ -59,29 +62,29 @@ export function SignUpForm(props) {
 			<FormContainer onSubmit={formik.handleSubmit}>
 				<FieldContainer>
 					<Input
-						name='fullName'
+						name='user_name'
 						placeholder='Full Name'
-						value={formik.values.fullName}
+						value={formik.values.user_name}
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
 					/>
 					<FieldError>
-						{formik.touched.fullName && formik.errors.fullName
-							? formik.errors.fullName
+						{formik.touched.user_name && formik.errors.user_name
+							? formik.errors.user_name
 							: ''}
 					</FieldError>
 				</FieldContainer>
 				<FieldContainer>
 					<Input
-						name='email'
+						name='email_address'
 						placeholder='Email'
-						value={formik.values.email}
+						value={formik.values.email_address}
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
 					/>
 					<FieldError>
-						{formik.touched.email && formik.errors.email
-							? formik.errors.email
+						{formik.touched.email_address && formik.errors.email_address
+							? formik.errors.email_address
 							: ''}
 					</FieldError>
 				</FieldContainer>
@@ -121,9 +124,9 @@ export function SignUpForm(props) {
 				</SubmitButton>
 			</FormContainer>
 			<Marginer direction='vertical' margin={5} />
-			<MutedLink href='#'>
+			<MutedLink href='javascript:void(0);'>
 				Already have an account?
-				<BoldLink href='#' onClick={switchToSignin}>
+				<BoldLink href='javascript:void(0);' onClick={switchToSignin}>
 					sign in
 				</BoldLink>
 			</MutedLink>
