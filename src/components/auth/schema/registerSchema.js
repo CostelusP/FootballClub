@@ -3,11 +3,14 @@ import * as yup from 'yup'
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 
 export const validationRegisterSchema = yup.object({
-	fullName: yup
+	user_name: yup
 		.string()
 		.min(3, 'Please enter you real name')
-		.required('Full name is required!'),
-	email: yup.string().email('Please enter a valid email address').required(),
+		.required('User Name is required!'),
+	email_address: yup
+		.string()
+		.email('Please enter a valid email address')
+		.required(),
 	password: yup
 		.string()
 		.matches(PASSWORD_REGEX, 'Please enter a strong password')

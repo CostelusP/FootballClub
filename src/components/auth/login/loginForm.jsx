@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url */
 import { useFormik } from 'formik'
 import React, { useContext, useState } from 'react'
 import { Marginer } from '../marginer'
@@ -19,22 +20,29 @@ import { validationLoginSchema } from '../schema/loginSchema'
 export function LoginForm(props) {
 	const { switchToSignup } = useContext(AccountContext)
 	const [error, setError] = useState(null)
+	const [loginStatus, setLoginStatus] = useState(false)
 
 	const onSubmit = async (values) => {
 		setError(null)
 		const response = await axios
-			.post('http://localhost:5000/api/v1/login', values)
+			.post('http://localhost:3100/users/login', values)
 			.catch((err) => {
 				if (err && err.response) setError(err.response.data.message)
+				console.error(err)
+				setLoginStatus(false)
 			})
 
 		if (response) {
 			alert('Welcome back in. Authenticating...')
 		}
+		if (response.data && response.data.message === 'User logged in') {
+			localStorage.setItem('token', response.data.access_token)
+			setLoginStatus(true)
+		}
 	}
 
 	const formik = useFormik({
-		initialValues: { email: '', password: '' },
+		initialValues: { email_address: '', password: '' },
 		validateOnBlur: true,
 		onSubmit,
 		validationSchema: validationLoginSchema,
@@ -46,16 +54,16 @@ export function LoginForm(props) {
 			<FormContainer onSubmit={formik.handleSubmit}>
 				<FieldContainer>
 					<Input
-						name='email'
+						name='email_address'
 						placeholder='Email'
-						value={formik.values.email}
+						value={formik.values.email_address}
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
 					/>
 					{
 						<FieldError>
-							{formik.touched.email && formik.errors.email
-								? formik.errors.email
+							{formik.touched.email_address && formik.errors.email_address
+								? formik.errors.email_address
 								: ''}
 						</FieldError>
 					}
@@ -84,9 +92,9 @@ export function LoginForm(props) {
 				</SubmitButton>
 			</FormContainer>
 			<Marginer direction='vertical' margin={5} />
-			<MutedLink href='#'>
+			<MutedLink href='javascript:void(0);'>
 				Dont have an Account?
-				<BoldLink href='#' onClick={switchToSignup}>
+				<BoldLink href='javascript:void(0);' onClick={switchToSignup}>
 					sign up
 				</BoldLink>
 			</MutedLink>
