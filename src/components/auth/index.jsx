@@ -11,6 +11,7 @@ import {
 	HeaderContainer,
 	HeaderText,
 	BackDrop,
+	AppContainer,
 } from './component'
 
 export function Authentication(props) {
@@ -50,34 +51,36 @@ export function Authentication(props) {
 
 	return (
 		<AccountContext.Provider value={contextValue}>
-			<BoxContainer>
-				<TopContainer>
-					<BackDrop
-						initial={false}
-						animate={isExpanded ? 'expanded' : 'collapsed'}
-						variants={backdropVariants}
-						transition={expandingTransition}
-					/>
-					{active === 'signin' && (
-						<HeaderContainer>
-							<HeaderText>Welcome</HeaderText>
-							<HeaderText>Back</HeaderText>
-							<SmallText>Please sign-in to continue!</SmallText>
-						</HeaderContainer>
-					)}
-					{active === 'signup' && (
-						<HeaderContainer>
-							<HeaderText>Create</HeaderText>
-							<HeaderText>Account</HeaderText>
-							<SmallText>Please sign-up to continue!</SmallText>
-						</HeaderContainer>
-					)}
-				</TopContainer>
-				<InnerContainer>
-					{active === 'signin' && <LoginForm />}
-					{active === 'signup' && <SignUpForm />}
-				</InnerContainer>
-			</BoxContainer>
+			<AppContainer>
+				<BoxContainer>
+					<TopContainer>
+						<BackDrop
+							initial={false}
+							animate={isExpanded ? 'expanded' : 'collapsed'}
+							variants={backdropVariants}
+							transition={expandingTransition}
+						/>
+						{active === 'signin' && (
+							<HeaderContainer>
+								<HeaderText>Welcome</HeaderText>
+								<HeaderText>Back</HeaderText>
+								<SmallText>Please sign-in to continue!</SmallText>
+							</HeaderContainer>
+						)}
+						{active === 'signup' && (
+							<HeaderContainer>
+								<HeaderText>Create</HeaderText>
+								<HeaderText>Account</HeaderText>
+								<SmallText>Please sign-up to continue!</SmallText>
+							</HeaderContainer>
+						)}
+					</TopContainer>
+					<InnerContainer>
+						{active === 'signin' && <LoginForm />}
+						{active === 'signup' && <SignUpForm />}
+					</InnerContainer>
+				</BoxContainer>
+			</AppContainer>
 		</AccountContext.Provider>
 	)
 }

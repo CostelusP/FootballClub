@@ -50,8 +50,6 @@ export function SignUpForm(props) {
 		validationSchema: validationRegisterSchema,
 	})
 
-	console.log('Error', error)
-
 	return (
 		<BoxContainer>
 			{!error && <FormSuccess>{success ? success : ''}</FormSuccess>}

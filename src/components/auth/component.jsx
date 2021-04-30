@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
+import imageLogin from '../../assets/images/loginImage.jpg'
 
 const BoxContainer = styled.div`
 	width: 350px;
@@ -71,6 +72,16 @@ const InnerContainer = styled.div`
 	flex-direction: column;
 	padding: 0 1.8em;
 `
+const AppContainer = styled.div`
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: url(${imageLogin}) no-repeat center center fixed;
+	background-size: cover;
+`
 
 export {
 	BackDrop,
@@ -80,4 +91,5 @@ export {
 	TopContainer,
 	HeaderContainer,
 	HeaderText,
+	AppContainer,
 }
