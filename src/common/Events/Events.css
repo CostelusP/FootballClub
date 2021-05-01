@@ -1,0 +1,113 @@
+.content-area {
+  position: absolute;
+  background: #f9f9f9;
+  height: 100%;
+  width: 82%;
+  left: 18%;
+  margin-right:0px;
+}
+
+.buttons-events {
+  margin-left: 15px;
+  margin-top: 20px;
+}
+.but {
+  margin: 2px;
+  padding: 2px 20px 2px 20px;
+  text-align: center;
+  border-radius: 5px;
+  border: solid 1px;
+  height: 40px;
+  font-size: 14px;
+  font-style: inherit;
+  font-weight: 600;
+  line-height: 16px;
+  color: #8e9296;
+  background-color: white;
+  cursor: pointer;
+}
+.search-bar-events {
+  left: 15px;
+  width: 330px;
+  height: 40px;
+}
+.but:hover {
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  outline: 0;
+}
+.but:focus {
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+}
+.but:active {
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  outline: 0;
+}
+.events-component {
+  flex-wrap: wrap;
+  display: flex;
+  width: 1050px;
+  margin: auto;
+  margin-top: 10px;
+}
+.but-new {
+  background-color: #1a1a1a;
+  text-align: center;
+  color: #44dabd;
+  padding: 5px;
+  border-radius: 8px;
+  width: 150px;
+  height: 40px;
+  margin-left: 520px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+.but-new:hover {
+  border-radius: 8px;
+  transform: translate(0.2);
+}
+.but-new:focus {
+  outline: 0;
+  border-radius: 8px;
+}
+.but-new:active {
+  transform: translateY(1px);
+  box-shadow: 0 5px rgb(238, 235, 235);
+}
+
+.input-events-new {
+  height: 46px;
+  margin-left: 15px;
+  width: 350px;
+  border: 1px solid #8e9296;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+.grid-events {
+  margin-top: 30px;
+  display: flex;
+}
+
+a.style-card-events-link {
+  color: black;
+}
+a.style-card-events-link:hover {
+  transform: scale(1.05);
+  color: black;
+}
+
+.content-area.ui.pagination.menu {
+  margin-left: 35px !important;
+} 
+
+
+
+@media screen and (max-width: 590px) {
+  .search-bar {width: 75%;  }
+ 
+}

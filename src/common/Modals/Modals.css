@@ -1,0 +1,21 @@
+.modal-add-title {
+  text-align: center;
+}
+
+.modal-add-description {
+  text-align: center;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.button-modal-added {
+  width: 7rem;
+  height: 40px;
+  display: block;
+  margin: 20px auto;
+  background-color: #1a1a1a;
+  text-align: center;
+  color: #44dabd;
+  padding: 5px;
+  border-radius: 8px;
+}
