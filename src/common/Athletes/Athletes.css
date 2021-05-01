@@ -1,0 +1,41 @@
+
+
+.persons-atheltes {
+  width: 950px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+.grid-athletes {
+  width: 950px;
+  margin-top: 20px;
+  display: flex;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.but-new-athletes {
+  background-color: #1a1a1a;
+  text-align: center;
+  color: #44dabd;
+  padding: 5px;
+  border-radius: 8px;
+  width: 150px;
+  height: 40px;
+  margin-left: 480px;
+  cursor: pointer;
+}
+.but-new-athletes:hover {
+  border-radius: 8px;
+  transform: translate(0.2);
+}
+.but-new-athletes:focus {
+  outline: 0;
+  border-radius: 8px;
+}
+.but-new-athletes:active {
+  transform: translateY(1px);
+  box-shadow: 0 5px #666;
+}

@@ -1,0 +1,71 @@
+.person-image {
+  border-radius: 50%;
+  width: 120px;
+  margin: 0 auto;
+  height: 120px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.person-sport {
+  display: grid;
+  grid-template-columns: 100px 100px;
+  width: 200px;
+  margin: 0 auto;
+}
+
+.vertical-line {
+  border-left: thick solid black;
+}
+
+.person-hr {
+  width: 200px;
+}
+
+.person-info {
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+.person-sports-div {
+  margin-bottom: 70px;
+  margin-top: 40px;
+}
+
+.person-name {
+  height: 42px;
+
+  /* inter/h2 */
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 36px;
+  line-height: 42px;
+  /* identical to box height, or 117% */
+
+  text-align: center;
+  text-transform: capitalize;
+
+  color: #000000;
+}
+
+.person-details {
+  height: 14px;
+
+  /* inter/subtitle */
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  /* identical to box height, or 117% */
+
+  text-align: center;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  color: #000000;
+}

@@ -1,0 +1,107 @@
+.modal-form {
+  position: relative;
+  display: block;
+  width: 100px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #8e9296;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.modal-form h2 {
+  position: absolute;
+
+  height: 42px;
+  left: 39px;
+  top: 56px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 36px;
+  line-height: 42px;
+  text-transform: capitalize;
+  color: #000000;
+}
+.modal-form hr:nth-child(2) {
+  position: absolute;
+  height: 0px;
+  left: 39px;
+  right: 39px;
+  top: 112px;
+  border: 1px solid #cad2e2;
+}
+
+.input-mail-invite {
+  margin-top: 6px !important;
+}
+
+.second-line {
+  height: 0px;
+  left: 0px;
+  right: 0px;
+  top: 0px !important;
+  border: 1px solid #cad2e2;
+}
+
+.modal-form-inputs {
+  position: absolute;
+  top: 140px;
+  left: 39px;
+  left: 39px;
+  right: 39px;
+}
+
+.modal-form.ui {
+  max-width: 600px;
+  height: 100vh;
+}
+
+.button {
+  width: 140px;
+}
+
+.cancel-button {
+  width: 86px;
+  height: 46px;
+  right: 195px;
+  bottom: 39px;
+  border-radius: 8px;
+  border: none;
+}
+
+.modal-form-buttons {
+  text-align: right;
+}
+
+.club-invite {
+  margin-top: 20px;
+}
+
+.delete-button-club {
+  width: 86px;
+  background-color: white;
+  color: #44dabd;
+  height: 46px;
+  bottom: 39px;
+  margin: 16px;
+  border-radius: 8px;
+  border: none;
+  float: left;
+}
+
+.label-invite-members {
+  margin-top: 10px;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.close-icon {
+  float: right;
+  cursor: pointer;
+}
+
+.error-fields {
+  border-bottom: red;
+  border-bottom-style: inset;
+}

@@ -1,0 +1,127 @@
+.button {
+  background-color: #1a1a1a;
+  text-align: center;
+  color: #44dabd;
+  padding: 5px;
+  border-radius: 8px;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.rendered {
+  display: flex;
+}
+
+.search-bar {
+  width: 300px;
+  height: 40px;
+  background: #ffffff;
+  margin-left: 30px;
+  box-sizing: border-box;
+}
+
+.sidebar {
+  height: 100%;
+  width: 18%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  background-color: #1a1a1a;
+}
+img.ui.image.sidebar-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+.sidebar-user-name {
+  color: #ffffff;
+  margin:10px;
+  height: 32px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 21px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar-user-role {
+  color: #8e9296;
+  text-align: center !important;
+  margin-top:10px;
+  height: 14px;
+  font-family: "Inter", sans-serif;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sidebar-buttons {
+  background-color: #1a1a1a;
+  text-align: center;
+  color: #ffffff;
+  padding: 5px;
+  border: none;
+  width: 70%;
+  height: 46px;
+  margin-left:15%;
+  margin-top:10px;
+}
+
+.sidebar-buttons:hover {
+  border: solid 2px;
+  border-radius: 8px;
+  border-color: white;
+}
+
+.sidebar-buttons:active {
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  outline: 0;
+}
+
+.coaches-button {
+  display: none;
+}
+
+.button-icon {
+  float: left;
+  margin-left: 15%;
+}
+
+.button-zone {
+  margin-top: 80px;
+}
+
+.logout-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.logout-button {
+  background: transparent;
+  color: white;
+  border: none;
+}
+
+a.active button {
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  outline: 0;
+}

@@ -1,0 +1,103 @@
+.card-events {
+  width: 480px;
+  height: 270px;
+  border-radius: 12px;
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.events-image {
+  position: absolute;
+  width: 200px;
+  height: 270px;
+}
+.events-text {
+  position: absolute;
+  width: 260px;
+  height: 270px;
+  background: #ffffff;
+  left: 220px;
+}
+.events-text2 {
+  top: auto;
+  height: 200px;
+}
+
+.events-text h3 {
+  margin-left: 10px;
+  margin-top: 20px !important;
+  margin-bottom: 5px;
+}
+.body-events-text {
+  height: 60px;
+  width: 240px;
+  overflow: hidden;
+}
+.body-events-text p {
+  margin-left: 10px;
+  word-wrap: break-word;
+  margin-top: 0px;
+  margin-right: 15px;
+
+  overflow: hidden;
+}
+.events-text h4 {
+  margin-left: 14px;
+  color: #8e9296;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 20px !important;
+  margin-bottom: 4px;
+}
+
+.events {
+  margin: 15px;
+}
+
+.events-card-details {
+  display: flex;
+  left: 14px;
+  margin-top: 20px;
+}
+.events-calendar {
+  display: flex;
+  margin-left: 10px;
+  margin-right: 20px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+.events-calendar p {
+  display: inline-flex;
+  margin-left: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.events-time {
+  display: flex;
+}
+.events-time p {
+  display: flex;
+  margin-left: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.events-location {
+  display: flex;
+  margin-top: 5px !important;
+  margin-left: 10px;
+}
+
+.events-location p {
+  display: flex;
+  margin-left: 0px !important;
+  margin-top: 0px !important;
+}
