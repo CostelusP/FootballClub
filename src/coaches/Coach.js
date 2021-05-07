@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import CoachTable from './CoachTable'
 import { Grid, GridRow, GridColumn, Input } from 'semantic-ui-react'
 import './Coach.css'
-import ModalAddCoach from './ModalAddCoach'
-import ModalAdded from '../../common/Modals/ModalAdded'
-import { Button, PagesContent, PagesTitle } from '../../styledComponents'
+import ModalAddCoach from '../modals/ModalAddCoach'
+import ModalAdded from '../modals/ModalAdded'
+import { Button, PagesContent, PagesTitle } from '../styledComponents'
 
 class Coach extends Component {
 	state = {
@@ -76,6 +76,13 @@ class Coach extends Component {
 						</GridColumn>
 					</GridRow>
 				</Grid>
+				<div className='coach-table'>
+					<CoachTable
+						ref={this.childTable}
+						searchString={this.state.searchString}
+						searchPressed={this.state.searchOk}
+					/>
+				</div>
 				<ModalAddCoach
 					showModal={this.state.show}
 					hideModal={this.hideModal}
@@ -93,13 +100,6 @@ class Coach extends Component {
 					name={'Coach added'}
 					description={'Coach ' + this.state.name + ' was added'}
 				/>
-				<div className='table-coach'>
-					<CoachTable
-						ref={this.childTable}
-						searchString={this.state.searchString}
-						searchPressed={this.state.searchOk}
-					/>
-				</div>
 			</PagesContent>
 		)
 	}

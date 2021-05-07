@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
-import InputSearch from '../../common/InputSearch'
-import InputForm from './ModalAddClub/ModalAddClub'
+import InputForm from '../modals/ModalAddClub'
 import { Link } from 'react-router-dom'
 import ClubThumbnail from './ClubThumbnail'
 import { Grid, GridRow, Input } from 'semantic-ui-react'
 import { GridColumn } from 'semantic-ui-react'
-import ModalAdded from '../../common/Modals/ModalAdded'
+import ModalAdded from '../modals/ModalAdded'
 import axios from 'axios'
 import './Club.css'
-import { Button, PagesContent, PagesTitle } from '../../styledComponents'
+import { Button, PagesContent, PagesTitle } from '../styledComponents'
 
 class Club extends Component {
 	state = {

@@ -1,3 +1,11 @@
+
+.icon-table {
+  margin-right: 10px;
+}
+
+.coach-table {
+  margin: 30px;
+}
 .ui.table thead th {
   background-color: black !important;
   color: white !important;

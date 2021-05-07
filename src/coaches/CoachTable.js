@@ -1,14 +1,14 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { Table, Checkbox, GridRow, Grid } from 'semantic-ui-react'
-import './CoachTable.css'
-import edit_icon from '../../assets/edit-icon.svg'
-import trash_icon from '../../assets/trash.svg'
-import ModalAddCoach from './ModalAddCoach'
-import ModalDeleted from '../../common/Modals/ModalDeleted'
+import { Table, Checkbox } from 'semantic-ui-react'
+import './Coach.css'
+import edit_icon from '../assets/edit-icon.svg'
+import trash_icon from '../assets/trash.svg'
+import ModalAddCoach from '../modals/ModalAddCoach'
+import ModalDeleted from '../modals/ModalDeleted'
 import Axios from 'axios'
 import { Pagination } from 'semantic-ui-react'
-import { PaginationDiv } from '../../styledComponents'
+import { PaginationDiv } from '../styledComponents'
 
 export default class CoachTable extends Component {
 	state = {
@@ -58,7 +58,7 @@ export default class CoachTable extends Component {
 
 	deleteItem = (deleteReceived) => {
 		if (deleteReceived) {
-			const url = `http://34.65.176.55:8081/api/coach/${this.state.idDeleted}/`
+			const url = `http://localhost:3100/users/coach/?id=${this.state.idDeleted}`
 			Axios.delete(url, {
 				headers: {
 					Authorization: this.token,
@@ -77,10 +77,7 @@ export default class CoachTable extends Component {
 	hideDeleteConfirm = (e, index) => {
 		this.setState({
 			idDeleted: this.state.coaches_page[index].id,
-			nameDeleted:
-				this.state.coaches_page[index].first_name +
-				' ' +
-				this.state.coaches_page[index].first_name,
+			nameDeleted: this.state.coaches_page[index].user_name,
 			show: false,
 			showDelete: true,
 		})
@@ -96,6 +93,7 @@ export default class CoachTable extends Component {
 			{ personToEdit: this.state.coaches_page[index] },
 			function () {}
 		)
+		console.log(this.state.coaches_page[index])
 		this.showModalEdit(this.state.coaches_page[index])
 	}
 
@@ -103,6 +101,7 @@ export default class CoachTable extends Component {
 		const { column, coaches_page, direction } = this.state
 
 		if (column !== clickedColumn) {
+			console.log(clickedColumn, coaches_page)
 			this.setState({
 				column: clickedColumn,
 				coaches_page: _.sortBy(coaches_page, [clickedColumn]),
@@ -126,7 +125,7 @@ export default class CoachTable extends Component {
 	}
 
 	coachesHandler = () => {
-		let url = `http://34.65.176.55:8081/api/coach/?page=1&search=${this.props.searchString}&limit=10/`
+		let url = `http://localhost:3100/users/coaches/?page=1&search=${this.props.searchString}&limit=10`
 		const token = localStorage.getItem('token')
 		Axios.get(
 			url,
@@ -138,7 +137,6 @@ export default class CoachTable extends Component {
 			}
 		).then((response) => {
 			this.setState({ coaches_page: response.data.coaches })
-
 			this.setState({ numberPages: response.data.page_number })
 		})
 	}
@@ -147,9 +145,9 @@ export default class CoachTable extends Component {
 		this.coachesHandler()
 	}
 
-	setNumPage = (event, { activePage }) => {
+	setNumPage = (_, { activePage }) => {
 		this.setState({ page: activePage })
-		let url = `http://34.65.176.55:8081/api/coach/?page=${activePage}&search=${this.state.search}&limit=10/`
+		let url = `http://localhost:3100/users/coaches/?page=${activePage}&search=${this.state.search}&limit=10`
 		Axios.get(url, {
 			headers: {
 				Authorization: this.token,
@@ -169,14 +167,14 @@ export default class CoachTable extends Component {
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell
-								sorted={column === 'first_name last_name' ? direction : null}
-								onClick={this.handleSort('first_name last_name')}
+								sorted={column === 'user_name' ? direction : null}
+								onClick={this.handleSort('user_name')}
 							>
-								First and Last Name
+								User Name
 							</Table.HeaderCell>
 							<Table.HeaderCell
-								sorted={column === 'email' ? direction : null}
-								onClick={this.handleSort('email')}
+								sorted={column === 'email_address' ? direction : null}
+								onClick={this.handleSort('email_address')}
 							>
 								Email Address
 							</Table.HeaderCell>
@@ -195,9 +193,9 @@ export default class CoachTable extends Component {
 								<Table.Row key={index}>
 									<Table.Cell>
 										<Checkbox className='table-checkbox' />
-										{coaches.first_name + ' ' + coaches.last_name}
+										{coaches.user_name}
 									</Table.Cell>
-									<Table.Cell>{coaches.email}</Table.Cell>
+									<Table.Cell>{coaches.email_address}</Table.Cell>
 									<Table.Cell>{coaches.club}</Table.Cell>
 									<Table.Cell>
 										<img
@@ -241,12 +239,12 @@ export default class CoachTable extends Component {
 				/>
 
 				<ModalDeleted
-					hideAddConfirm={this.state.showDelete}
+					hideShowDelete={this.state.showDelete}
 					hideModal={this.hideModal}
 					setName={this.nameHandle}
 					title={'Delete Coach'}
 					name={this.state.nameDeleted}
-					ConfirmDelete={this.deleteItem}
+					confirmDelete={this.deleteItem}
 					description={
 						'If you delete coach’s account, all data associated with this profile will permanently deleted.'
 					}

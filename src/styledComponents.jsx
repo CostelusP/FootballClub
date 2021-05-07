@@ -18,7 +18,8 @@ const LogOutDiv = styled.div`
 const LogOut = styled.div`
 	position: absolute;
 	bottom: 60px;
-	margin-left: 67px;
+	display: flex;
+	justify-content: center;
 	cursor: pointer;
 `
 const PagesTitle = styled.h2`
@@ -57,8 +58,40 @@ const Button = styled.button`
 	cursor: pointer;
 	margin-right: 30px;
 `
+const CancelButton = styled.button`
+	width: 86px;
+	height: 40px;
+	right: 195px;
+	bottom: 39px;
+	border-radius: 8px;
+	border: solid 1px black;
+	margin-right: 5px;
+	cursor: pointer;
+`
+
+const DeleteButton = styled.button`
+	width: 86px;
+	height: 40px;
+	right: 195px;
+	bottom: 39px;
+	border-radius: 8px;
+	border: solid 1px;
+	margin-right: 5px;
+	color: #44dabd;
+	cursor: pointer;
+`
+
 const PaginationDiv = styled.div`
 	margin: 20px 0px 0px 30px;
 `
 
-export { LogOutDiv, LogOut, PagesTitle, PagesContent, Button, PaginationDiv }
+export {
+	LogOutDiv,
+	LogOut,
+	PagesTitle,
+	PagesContent,
+	Button,
+	PaginationDiv,
+	CancelButton,
+	DeleteButton,
+}

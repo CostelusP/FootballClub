@@ -106,19 +106,6 @@ img.ui.image.sidebar-icon {
   margin-top: 80px;
 }
 
-.logout-div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-.logout-button {
-  background: transparent;
-  color: white;
-  border: none;
-}
-
 a.active button {
   background-color: white;
   color: black;

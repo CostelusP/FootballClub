@@ -1,6 +1,6 @@
 .modal-form {
   position: relative;
-  display: block;
+  max-height: calc(100% - 120px);
   width: 100px;
   overflow-y: auto;
   background: #ffffff;
@@ -57,37 +57,12 @@
   height: 100vh;
 }
 
-.button {
-  width: 140px;
-}
-
-.cancel-button {
-  width: 86px;
-  height: 46px;
-  right: 195px;
-  bottom: 39px;
-  border-radius: 8px;
-  border: none;
-}
-
 .modal-form-buttons {
   text-align: right;
 }
 
 .club-invite {
   margin-top: 20px;
-}
-
-.delete-button-club {
-  width: 86px;
-  background-color: white;
-  color: #44dabd;
-  height: 46px;
-  bottom: 39px;
-  margin: 16px;
-  border-radius: 8px;
-  border: none;
-  float: left;
 }
 
 .label-invite-members {
@@ -104,4 +79,9 @@
 .error-fields {
   border-bottom: red;
   border-bottom-style: inset;
+}
+
+.button-form{
+display: inline-block;
+  margin-left: auto;
 }

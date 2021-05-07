@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import EventsComponent from './EventsComponent/EventsComponent'
 import './Events.css'
 import { Pagination, Input, Grid, GridRow, GridColumn } from 'semantic-ui-react'
-import ModalEvents from './ModalEvents'
-import ModalAdded from '../Modals/ModalAdded'
-import ModalDeleted from '../Modals/ModalDeleted'
+import ModalEvents from '../modals/ModalEvents'
+import ModalAdded from '../modals/ModalAdded'
+import ModalDeleted from '../modals/ModalDeleted'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import {
@@ -12,7 +12,7 @@ import {
 	PagesContent,
 	PagesTitle,
 	PaginationDiv,
-} from '../../styledComponents'
+} from '../styledComponents'
 
 class Events extends Component {
 	state = {

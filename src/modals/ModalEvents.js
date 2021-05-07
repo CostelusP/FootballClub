@@ -5,7 +5,7 @@ import * as moment from 'moment'
 import './ModalEvents.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import axios from 'axios'
-import close_icon from '../../assets/close.svg'
+import close_icon from '../assets/close.svg'
 
 class ModalEvents extends Component {
 	state = {

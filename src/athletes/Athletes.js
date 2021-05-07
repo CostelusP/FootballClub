@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './Athletes.css'
-import InputSearch from '../InputSearch'
 import axios from 'axios'
 import {
 	Icon,
@@ -10,16 +9,16 @@ import {
 	GridRow,
 	GridColumn,
 } from 'semantic-ui-react'
-import PersonClubThumbnail from '../../admin/Clubs/selected-club/person-in-club-card'
-import ModalAthletes from './ModalAthletes/ModalAthletes'
-import ModalAdded from '../Modals/ModalAdded'
-import ModalDeleted from '../Modals/ModalDeleted'
+import PersonClubThumbnail from '../clubs/selected-club/CardPerson'
+import ModalAthletes from '../modals/ModalAthletes'
+import ModalAdded from '../modals/ModalAdded'
+import ModalDeleted from '../modals/ModalDeleted'
 import {
 	Button,
 	PagesContent,
 	PagesTitle,
 	PaginationDiv,
-} from '../../styledComponents'
+} from '../styledComponents'
 
 class Athletes extends Component {
 	state = {

@@ -5,7 +5,7 @@ import Layout from './App'
 import * as serviceWorker from './serviceWorker'
 import 'semantic-ui-css/semantic.min.css'
 import { BrowserRouter, Redirect, Route } from 'react-router-dom'
-import SideBar from './common/SideBar'
+import SideBar from './components/SideBar'
 
 import { Authentication } from './auth/index'
 
