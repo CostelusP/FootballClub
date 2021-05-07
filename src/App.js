@@ -1,12 +1,12 @@
 import React from 'react'
-import Club from './admin/Clubs/Club'
+import Club from './clubs/Club'
 import './Components.css'
 import { Route, Redirect, Switch } from 'react-router-dom'
-import Events from './common/Events/Events'
-import SelectedEvents from './common/Events/SelectedEvents/SelectedEvents'
-import SelectedClub from './admin/Clubs/selected-club/selected-club'
-import Coach from './admin/Coaches/Coach'
-import Athletes from './common/Athletes/Athletes'
+import Events from './events/Events'
+import SelectedEvents from './events/SelectedEvents/SelectedEvents'
+import SelectedClub from './clubs/selected-club/SelectedClub'
+import Coach from './coaches/Coach'
+import Athletes from './athletes/Athletes'
 
 function App() {
 	return (
