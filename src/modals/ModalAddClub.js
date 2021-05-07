@@ -3,6 +3,7 @@ import { Form, Modal, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
 import close_icon from '../assets/close.svg'
 import './ModalAddClub.css'
+import { Button, CancelButton, DeleteButton } from '../styledComponents'
 
 class InputForm extends Component {
 	state = {
@@ -172,7 +173,7 @@ class InputForm extends Component {
 								src={close_icon}
 								alt=''
 								className='close-icon'
-								onClick={this.props.hideDeleted}
+								onClick={this.props.hideModal}
 							/>
 						</div>
 						<div>
@@ -247,19 +248,39 @@ class InputForm extends Component {
 
 								<br />
 								<br />
+								<hr className='second-line'></hr>
 								<div className='modal-form-buttons'>
-									<hr className='second-line'></hr>
-									<div>{this.props.editForm ? <this.Edit /> : null}</div>
-									<button
-										className='cancel-button'
-										onClick={this.props.hideModal}
+									
+									<div className='modal-form-buttons'>
+									{this.props.editForm ? (
+										<DeleteButton
+											style={{ float: 'left', marginTop: '10px' }}
+											onClick={this.deleteClickedHandler}
+										>
+											Delete
+										</DeleteButton>
+									) : null}
+									<div
+										style={{
+											float: 'right',
+											textAlign: 'right',
+											marginTop: '10px',
+										}}
 									>
-										{' '}
-										Cancel
-									</button>
-									<button className='button' onClick={this.addClickedHandler}>
-										{this.props.action}
-									</button>
+										<CancelButton
+											style={{ display: 'inline-block' }}
+											onClick={this.props.hideModal}
+										>
+											Cancel
+										</CancelButton>
+										<Button
+											style={{ display: 'inline-block', marginRight: '0px' }}
+											onClick={this.addClickedHandler}
+										>
+											{this.props.action}
+										</Button>
+									</div>
+								</div>
 								</div>
 							</div>
 						</div>

@@ -252,18 +252,18 @@ class ModalAthletes extends Component {
 				style={{ maxWidth: '600px' }}
 				open={this.props.handleOpenModal}
 				close={this.props.handleCloseModal}
-				className='modal-athletes'
+				className='modal-form'
 			>
 				<Modal.Content>
 					<Form>
-						<div>
+						
 							<img
 								src={close_icon}
 								className='close-icon-athlete'
 								alt=''
 								onClick={this.cancelClickedHandler}
 							/>
-						</div>
+						
 						<div className='modal-athletes-div'>
 							<h2>{this.props.NameModalAthletes}</h2>
 							<div className='first-line-athletes'>

@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import {
 	Form,
-	Grid,
-	GridColumn,
-	GridRow,
 	Input,
 	Modal,
 } from 'semantic-ui-react'

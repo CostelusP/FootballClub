@@ -38,8 +38,11 @@
 }
 
 .grid-container {
-  display: grid;
-  grid-template-columns: auto auto auto !important;
+  margin-top: 40px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 @media screen and (max-width: 1100px) {
   .grid-container {

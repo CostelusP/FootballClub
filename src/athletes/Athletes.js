@@ -21,6 +21,33 @@ import {
 } from '../styledComponents'
 
 class Athletes extends Component {
+	members = [
+		{
+			id_User: { first_name: 'aaa', last_name: 'bb' },
+			gender: 'male',
+			age: 46,
+		},
+		{
+			id_User: { first_name: 'aaa', last_name: 'bb' },
+			gender: 'male',
+			age: 46,
+		},
+		{
+			id_User: { first_name: 'aaa', last_name: 'bb' },
+			gender: 'male',
+			age: 46,
+		},
+		{
+			id_User: { first_name: 'aaa', last_name: 'bb' },
+			gender: 'male',
+			age: 46,
+		},
+		{
+			id_User: { first_name: 'aaa', last_name: 'bb' },
+			gender: 'male',
+			age: 46,
+		},
+	]
 	state = {
 		membersClicked: false,
 		show: false,
@@ -155,8 +182,8 @@ class Athletes extends Component {
 					description={`Athlete ${this.state.addAthlete} was added on ${this.state.inClub}`}
 				/>
 				<div className='persons-atheltes'>
-					{this.state.athletes &&
-						this.state.athletes.map((athlete, index) => (
+					{this.members &&
+						this.members.map((athlete, index) => (
 							<PersonClubThumbnail
 								name={athlete.first_name + ' ' + athlete.last_name}
 								gender={athlete.gender}

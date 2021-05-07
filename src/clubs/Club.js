@@ -15,6 +15,12 @@ class Club extends Component {
 		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
 		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
 		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
 	]
 	state = {
 		show: false,

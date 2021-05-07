@@ -8,7 +8,7 @@ import InputForm from '../../modals/ModalAddClub'
 import ModalDeleted from '../../modals/ModalDeleted'
 import ModalAdded from '../../modals/ModalAdded'
 import Axios from 'axios'
-import { Button, PagesContent, PagesTitle } from '../../styledComponents'
+import { Button, PagesContent, PagesTitle, PaginationDiv } from '../../styledComponents'
 
 class SelectedClub extends Component {
 	members = [
@@ -213,9 +213,6 @@ class SelectedClub extends Component {
 									placeholder='Search...'
 								/>
 							</GridColumn>
-							<GridColumn floated='right' align='right' computer='8' tablet='8'>
-								<Button>Add new</Button>
-							</GridColumn>
 						</GridRow>
 					</Grid>
 				</div>
@@ -270,13 +267,13 @@ class SelectedClub extends Component {
 						})}
 				</div>
 
-				<div className='pagination-numbers'>
+				<PaginationDiv>
 					<Pagination
 						activePage={this.state.page}
 						totalPages={this.state.numberPages}
 						onPageChange={this.setNumPage}
 					/>
-				</div>
+				</PaginationDiv>
 			</PagesContent>
 		)
 	}
