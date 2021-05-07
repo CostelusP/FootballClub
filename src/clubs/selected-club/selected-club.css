@@ -2,16 +2,16 @@
   background: #f9f9f9;
   position: absolute;
   height: 100%;
-  left: 216px;
+  left: 30;
   width: 85%;
   overflow-y: auto;
 }
 
 .icon-header {
-  display: block;
-  block-size: 20px;
-  margin-top: 10px;
-  margin-left: 10px;
+  height: 30px;
+  width:30px;
+  margin-top: 40px;
+  margin-left: -32px;
 }
 .header-name {
   font-family: Inter;
@@ -28,25 +28,17 @@
   min-width: 295px;
 }
 
-.header-selected-club {
-  display: flex;
-  margin-left: 16px;
-  margin-top: 30px;
-}
 
 .header-details {
-  margin-left: 16px;
+  margin-left: 30px;
   color: #8e9296;
   font-family: "Inter", sans-serif;
   text-transform: uppercase;
 }
 
 .header-details-name {
-  width: 250px;
-  height: 24px;
-  margin-left: 16px;
-  /* inter/paragraph */
-
+  
+  margin-left: 30px;
   font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 600;
@@ -71,9 +63,12 @@
 }
 
 .persons-grid {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  flex-wrap: wrap;
+    margin: auto;
+    text-align:center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
 }
 
 @media screen and (max-width: 745px) {

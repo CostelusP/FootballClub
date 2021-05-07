@@ -10,6 +10,12 @@ import './Club.css'
 import { Button, PagesContent, PagesTitle } from '../styledComponents'
 
 class Club extends Component {
+	clubs = [
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
+	]
 	state = {
 		show: false,
 		showAdd: false,
@@ -40,7 +46,6 @@ class Club extends Component {
 
 	getClub = () => {
 		let url = `http://34.65.176.55:8081/api/club/?search=${this.state.searchString}`
-		//let url = `http://192.168.100.228:8001/api/club/?search=${this.state.searchString}`;
 		const token = localStorage.getItem('token')
 		axios
 			.get(url, {
@@ -117,7 +122,7 @@ class Club extends Component {
 					/>
 					<div className='grid-container'>
 						{this.state.clubs &&
-							this.state.clubs.map((club, index) => (
+							this.clubs.map((club, index) => (
 								<Link to={`/clubs/${index}`} className='linkStyle'>
 									<ClubThumbnail
 										key={index}
@@ -126,7 +131,7 @@ class Club extends Component {
 											club.id_Owner.first_name + ' ' + club.id_Owner.last_name
 										}
 										className='grid-item'
-										number={this.state.noOfMembers[index]}
+										number={3}
 										id={index}
 									/>
 								</Link>

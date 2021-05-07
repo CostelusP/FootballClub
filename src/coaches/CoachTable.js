@@ -216,7 +216,7 @@ export default class CoachTable extends Component {
 						})}
 					</Table.Body>
 				</Table>
-				<PaginationDiv>
+				<PaginationDiv style={{ marginLeft: '0px' }}>
 					<Pagination
 						activePage={this.state.page}
 						totalPages={this.state.numberPages}
