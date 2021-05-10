@@ -85,6 +85,34 @@ const PaginationDiv = styled.div`
 	margin: 20px 0px 0px 30px;
 `
 
+const GridPlayers = styled.div`
+	display: flex;
+	margin-bottom: -5px;
+`
+const LineSecondLabel = styled.label`
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 24px;
+	display: flex;
+	align-items: right;
+	color: #000000;
+	margin-left: 60px;
+`
+const LineFirstLabel = styled.label`
+	font-family: Inter;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 14px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: #8e9296;
+`
+
 export {
 	LogOutDiv,
 	LogOut,
@@ -94,4 +122,7 @@ export {
 	PaginationDiv,
 	CancelButton,
 	DeleteButton,
+	GridPlayers,
+	LineSecondLabel,
+	LineFirstLabel,
 }

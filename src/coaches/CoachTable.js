@@ -51,9 +51,12 @@ export default class CoachTable extends Component {
 	hideModal = () => {
 		this.setState({
 			show: false,
-			showDelete: false,
+
 			showAdd: false,
 		})
+	}
+	hideModalDeleted = () => {
+		this.setState({ showDelete: false })
 	}
 
 	deleteItem = (deleteReceived) => {
@@ -101,7 +104,6 @@ export default class CoachTable extends Component {
 		const { column, coaches_page, direction } = this.state
 
 		if (column !== clickedColumn) {
-			console.log(clickedColumn, coaches_page)
 			this.setState({
 				column: clickedColumn,
 				coaches_page: _.sortBy(coaches_page, [clickedColumn]),
@@ -229,6 +231,7 @@ export default class CoachTable extends Component {
 					coachesHandler={this.coachesHandler}
 					showModal={this.state.show}
 					hideModal={this.hideModal}
+					hideModalDeleted={this.hideModalDeleted}
 					hideConfirmEdit={this.hideConfirmEdit}
 					hideAddConfirm={this.hideAddConfirm}
 					hideDeleteConfirm={(e) => this.hideDeleteConfirm}
@@ -239,12 +242,13 @@ export default class CoachTable extends Component {
 				/>
 
 				<ModalDeleted
-					hideShowDelete={this.state.showDelete}
+					showDelete={this.state.showDelete}
+					itemsHandler={this.coachesHandler}
 					hideModal={this.hideModal}
-					setName={this.nameHandle}
+					hideModalDeleted={this.hideModalDeleted}
 					title={'Delete Coach'}
 					name={this.state.nameDeleted}
-					confirmDelete={this.deleteItem}
+					confirmDeleteItem={this.deleteItem}
 					description={
 						'If you delete coach’s account, all data associated with this profile will permanently deleted.'
 					}

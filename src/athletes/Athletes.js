@@ -1,14 +1,7 @@
 import React, { Component } from 'react'
 import './Athletes.css'
 import axios from 'axios'
-import {
-	Icon,
-	Pagination,
-	Input,
-	Grid,
-	GridRow,
-	GridColumn,
-} from 'semantic-ui-react'
+import { Pagination, Input, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import PersonClubThumbnail from '../clubs/selected-club/CardPerson'
 import ModalAthletes from '../modals/ModalAthletes'
 import ModalAdded from '../modals/ModalAdded'
@@ -21,57 +14,18 @@ import {
 } from '../styledComponents'
 
 class Athletes extends Component {
-	members = [
-		{
-			id_User: { first_name: 'aaa', last_name: 'bb' },
-			gender: 'male',
-			age: 46,
-		},
-		{
-			id_User: { first_name: 'aaa', last_name: 'bb' },
-			gender: 'male',
-			age: 46,
-		},
-		{
-			id_User: { first_name: 'aaa', last_name: 'bb' },
-			gender: 'male',
-			age: 46,
-		},
-		{
-			id_User: { first_name: 'aaa', last_name: 'bb' },
-			gender: 'male',
-			age: 46,
-		},
-		{
-			id_User: { first_name: 'aaa', last_name: 'bb' },
-			gender: 'male',
-			age: 46,
-		},
-	]
 	state = {
 		membersClicked: false,
 		show: false,
 		showDelete: false,
-		showAdd: false,
-		athletes: [],
+		players: [],
 		page: 1,
 		numberpages: 0,
 		search: '',
 		addAthlete: '',
 		inClub: '',
 	}
-	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.search !== this.state.search) {
-			this.setState({ search: prevProps.search })
 
-			let url = `http://34.65.176.55:8081/api/athlete/?page=1&search=${this.state.search}&limit=10/`
-			const token = localStorage.getItem('token')
-			axios.get(url, { headers: { Authorization: token } }).then((response) => {
-				this.setState({ athletes: response.data.athletes })
-				this.setState({ numberpages: response.data.page_number })
-			})
-		}
-	}
 	handleOpenModal = () => {
 		this.setState({ show: true })
 	}
@@ -104,17 +58,32 @@ class Athletes extends Component {
 			showDelete: true,
 		})
 	}
-	componentDidMount() {
-		let url = `http://34.65.176.55:8081/api/athlete/?page=1&limit=10`
+
+	playersHandler = () => {
+		let url = `http://localhost:3100/players/?page=1&search=default&limit=12`
 		const token = localStorage.getItem('token')
 		axios.get(url, { headers: { Authorization: token } }).then((response) => {
-			this.setState({ athletes: response.data.athletes })
+			this.setState({ players: response.data.players })
 			this.setState({ numberpages: response.data.page_number })
 		})
 	}
+	componentDidMount() {
+		this.playersHandler()
+	}
+	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.search !== this.state.search) {
+			this.setState({ search: prevProps.search })
+			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12`
+			const token = localStorage.getItem('token')
+			axios.get(url, { headers: { Authorization: token } }).then((response) => {
+				this.setState({ players: response.data.players })
+				this.setState({ numberpages: response.data.page_number })
+			})
+		}
+	}
 	setNumPage = (event, { activePage }) => {
 		this.setState({ page: activePage })
-		let url = `http://34.65.176.55:8081/api/athlete/?page=${activePage}&limit=10/`
+		let url = `http://localhost:3100/players/?page=${activePage}&search=default&limit=12`
 		const token = localStorage.getItem('token')
 		axios
 			.get(url, {
@@ -123,8 +92,11 @@ class Athletes extends Component {
 				},
 			})
 			.then((response) => {
-				this.setState({ athletes: response.data.athletes })
+				this.setState({ players: response.data.players })
 				this.setState({ numberpages: response.data.page_number })
+			})
+			.catch((error) => {
+				console.log(error)
 			})
 	}
 	hadleInput = (date) => {
@@ -139,7 +111,7 @@ class Athletes extends Component {
 	render() {
 		return (
 			<PagesContent>
-				<PagesTitle>Athletes</PagesTitle>
+				<PagesTitle>players</PagesTitle>
 				<Grid>
 					<GridRow>
 						<GridColumn floated='left' align='left' computer='8' tablet='8'>
@@ -161,7 +133,8 @@ class Athletes extends Component {
 				</Grid>
 
 				<ModalAthletes
-					NameModalAthletes='Add Athlete'
+					nameModalAthletes='Create Player'
+					playerToEdit={null}
 					handleOpenModal={this.state.show}
 					handleCloseModal={this.handleCloseModal}
 					showModal={this.state.show}
@@ -169,29 +142,39 @@ class Athletes extends Component {
 					hideAddConfirm={this.hideAddConfirm}
 					addAthlete={this.AthleteIsAdded}
 					inClub={this.AddInClub}
+					playersHandler={this.playersHandler}
 				/>
 
-				<ModalDeleted
-					hideAddConfirm={this.state.showDelete}
-					hideModal={this.hideModal}
-				/>
-				<ModalAdded
-					hideAddConfirm={this.state.showAdd}
-					hideModal={this.hideModal}
-					name={'Athlete Added'}
-					description={`Athlete ${this.state.addAthlete} was added on ${this.state.inClub}`}
-				/>
 				<div className='persons-atheltes'>
-					{this.members &&
-						this.members.map((athlete, index) => (
-							<PersonClubThumbnail
-								name={athlete.first_name + ' ' + athlete.last_name}
-								gender={athlete.gender}
-								age={athlete.age}
-								primary_sport={athlete.primary_sport}
-								secondary_sport={athlete.secondary_sport}
-							/>
-						))}
+					{this.state.players &&
+						this.state.players.map((player, index) => {
+							const date_birth = player.date_of_birth
+								.substring(0, player.date_of_birth.indexOf('T'))
+								.split('-')
+							const date_of_birth = `${date_birth[2]}.${date_birth[1]}.${date_birth[0]}`
+							return (
+								<PersonClubThumbnail
+									full_name={player.full_name}
+									age={player.age}
+									position={player.position}
+									date_of_birth={date_of_birth}
+									weight={player.weight}
+									height={player.height}
+									rating={player.rating}
+									salary={player.salary}
+									isFrom='Player'
+									handleOpenModal={this.state.show}
+									handleCloseModal={this.handleCloseModal}
+									showModal={this.state.show}
+									hideModal={this.hideModal}
+									hideAddConfirm={this.hideAddConfirm}
+									addAthlete={this.AthleteIsAdded}
+									inClub={this.AddInClub}
+									playerToEdit={player}
+									playersHandler={this.playersHandler}
+								/>
+							)
+						})}
 				</div>
 				<PaginationDiv>
 					<Pagination

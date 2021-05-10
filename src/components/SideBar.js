@@ -125,7 +125,7 @@ class SideBar extends Component {
 							Clubs
 						</button>
 					</NavLink>
-					<NavLink to='/athletes' activeClassName='active'>
+					<NavLink to='/players' activeClassName='active'>
 						<button
 							className='sidebar-buttons'
 							onClick={this.pressedHandlerAthletes}
@@ -139,7 +139,7 @@ class SideBar extends Component {
 								}
 								className='button-icon'
 							/>
-							Athletes
+							Players
 						</button>
 					</NavLink>
 				</div>

@@ -5,9 +5,10 @@ import { Button, CancelButton } from '../styledComponents'
 
 class ModalDeleted extends Component {
 	deleteHandler = () => {
-		this.props.confirmDelete(true)
+		this.props.confirmDeleteItem(true)
+		this.props.hideModalDeleted()
+		this.props.itemsHandler()
 		this.props.hideModal()
-		this.props.coachesHandler()
 	}
 
 	render() {
@@ -15,24 +16,23 @@ class ModalDeleted extends Component {
 			<div>
 				<Modal
 					size='tiny'
-					open={this.props.hideShowDelete}
-					onClose={this.props.hideModal}
+					open={this.props.showDelete}
+					onClose={this.props.hideModalDeleted}
 				>
-					{console.log(this.props.hideShowDelete)}
 					<Modal.Header>
 						<div>
 							<img
 								alt=''
 								src={close_icon}
 								className='close-icon'
-								onClick={this.props.hideModal}
+								onClick={this.props.hideModalDeleted}
 							/>
 						</div>
 						<h2> {this.props.title} </h2>
 					</Modal.Header>
 					<Modal.Content>
 						<p>
-							Are you sure you want to delete {this.props.name}?{' '}
+							Are you sure you want to delete {this.props.name}?
 							{this.props.description}
 						</p>
 					</Modal.Content>
@@ -47,7 +47,7 @@ class ModalDeleted extends Component {
 						>
 							<CancelButton
 								style={{ display: 'inline-block' }}
-								onClick={this.props.hideModal}
+								onClick={this.props.hideModalDeleted}
 							>
 								Cancel
 							</CancelButton>
