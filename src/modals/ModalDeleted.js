@@ -7,8 +7,8 @@ class ModalDeleted extends Component {
 	deleteHandler = () => {
 		this.props.confirmDeleteItem(true)
 		this.props.hideModalDeleted()
-		this.props.itemsHandler()
 		this.props.hideModal()
+		this.props.itemsHandler()
 	}
 
 	render() {

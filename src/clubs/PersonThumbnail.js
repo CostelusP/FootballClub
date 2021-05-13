@@ -30,7 +30,9 @@ class PersonThumbnail extends Component {
 							<div style={{ margin: '0 auto', width: '75%' }}>
 								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
 									<LineFirstLabel>Date of birth</LineFirstLabel>
-									<LineSecondLabel>{this.props.date_of_birth}</LineSecondLabel>
+									<LineSecondLabel style={{ marginLeft: '50px' }}>
+										{this.props.date_of_birth}
+									</LineSecondLabel>
 								</GridPlayers>
 								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
 									<LineFirstLabel>Weight</LineFirstLabel>

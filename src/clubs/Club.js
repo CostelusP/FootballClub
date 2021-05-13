@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import InputForm from '../modals/ModalAddClub'
+import ModalAddClub from '../modals/ModalAddClub'
 import { Link } from 'react-router-dom'
 import ClubThumbnail from './ClubThumbnail'
 import { Grid, GridRow, Input } from 'semantic-ui-react'
@@ -10,18 +10,6 @@ import './Club.css'
 import { Button, PagesContent, PagesTitle } from '../styledComponents'
 
 class Club extends Component {
-	clubs = [
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-		{ id_Owner: { first_name: 'aaa', last_name: 'bb' } },
-	]
 	state = {
 		show: false,
 		showAdd: false,
@@ -50,8 +38,8 @@ class Club extends Component {
 		this.setState({ searchString: e.target.value })
 	}
 
-	getClub = () => {
-		let url = `http://34.65.176.55:8081/api/club/?search=${this.state.searchString}`
+	getClubs = () => {
+		let url = `http://localhost:3100/clubs/?search=${this.state.searchString}`
 		const token = localStorage.getItem('token')
 		axios
 			.get(url, {
@@ -60,13 +48,10 @@ class Club extends Component {
 				},
 			})
 			.then((response) => {
-				this.setState(
-					{
-						clubs: response.data.clubs,
-						noOfMembers: response.data.numbers,
-					},
-					function () {}
-				)
+				console.log(response.data)
+				this.setState({
+					clubs: response.data,
+				})
 			})
 	}
 
@@ -75,12 +60,12 @@ class Club extends Component {
 	}
 
 	componentDidMount() {
-		this.getClub()
+		this.getClubs()
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.searchString !== this.state.searchString) {
-			this.getClub()
+			this.getClubs()
 		}
 	}
 
@@ -109,7 +94,7 @@ class Club extends Component {
 							</GridColumn>
 						</GridRow>
 					</Grid>
-					<InputForm
+					<ModalAddClub
 						showModal={this.state.show}
 						hideModal={this.hideModal}
 						hideAddConfirm={this.hideAddConfirm}
@@ -128,17 +113,16 @@ class Club extends Component {
 					/>
 					<div className='grid-container'>
 						{this.state.clubs &&
-							this.clubs.map((club, index) => (
-								<Link to={`/clubs/${index}`} className='linkStyle'>
+							this.state.clubs.map((club, index) => (
+								<Link to={`/clubs/${club.club.id}`} className='linkStyle'>
 									<ClubThumbnail
 										key={index}
-										name={club.name}
-										coach={
-											club.id_Owner.first_name + ' ' + club.id_Owner.last_name
-										}
+										name={club.club.name}
+										description={club.club.description}
+										coach={club.coach.user_name || '-'}
 										className='grid-item'
 										number={3}
-										id={index}
+										id={club.club.id}
 									/>
 								</Link>
 							))}

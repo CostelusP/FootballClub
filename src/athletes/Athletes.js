@@ -73,17 +73,24 @@ class Athletes extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.search !== this.state.search) {
 			this.setState({ search: prevProps.search })
-			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12`
+			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12&clubId=null&isFrom=null`
 			const token = localStorage.getItem('token')
-			axios.get(url, { headers: { Authorization: token } }).then((response) => {
-				this.setState({ players: response.data.players })
-				this.setState({ numberpages: response.data.page_number })
-			})
+			axios
+				.get(
+					url,
+					{ club_id: null, is_From: null },
+					{ headers: { Authorization: token } }
+				)
+				.then((response) => {
+					console.log(response.data)
+					this.setState({ players: response.data.players })
+					this.setState({ numberpages: response.data.page_number })
+				})
 		}
 	}
 	setNumPage = (event, { activePage }) => {
 		this.setState({ page: activePage })
-		let url = `http://localhost:3100/players/?page=${activePage}&search=default&limit=12`
+		let url = `http://localhost:3100/players/?page=${activePage}&search=default&limit=12&clubId=null&isFrom=null`
 		const token = localStorage.getItem('token')
 		axios
 			.get(url, {
@@ -141,7 +148,6 @@ class Athletes extends Component {
 					hideModal={this.hideModal}
 					hideAddConfirm={this.hideAddConfirm}
 					addAthlete={this.AthleteIsAdded}
-					inClub={this.AddInClub}
 					playersHandler={this.playersHandler}
 				/>
 
@@ -154,6 +160,7 @@ class Athletes extends Component {
 							const date_of_birth = `${date_birth[2]}.${date_birth[1]}.${date_birth[0]}`
 							return (
 								<PersonClubThumbnail
+									key={player.id}
 									full_name={player.full_name}
 									age={player.age}
 									position={player.position}
@@ -178,7 +185,6 @@ class Athletes extends Component {
 				</div>
 				<PaginationDiv>
 					<Pagination
-						defaultActivePage={1}
 						totalPages={this.state.numberpages}
 						onPageChange={this.setNumPage}
 						activePage={this.state.page}

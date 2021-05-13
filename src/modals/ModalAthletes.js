@@ -73,6 +73,9 @@ class ModalAthletes extends Component {
 			this.setState({ heightvalid: false })
 		}
 	}
+	ClubHandler = (e, result) => {
+		this.setState({ club: result.value })
+	}
 	AgeHandler = (data) => {
 		this.setState({ age: data.target.value })
 	}
@@ -117,40 +120,26 @@ class ModalAthletes extends Component {
 		}
 	}
 
-	componentDidMount() {
-		let url = 'http://34.65.176.55:8081/api/sports/'
+	getClubs = () => {
+		let url = 'http://localhost:3100/clubs/?search=default'
 		const token = localStorage.getItem('token')
 		axios.get(url, { headers: { Authorization: token } }).then((response) => {
-			let sport =
+			let club =
 				response &&
 				response.data &&
 				response.data.map((item, index) => {
 					return {
-						key: item.id,
-						text: item.description,
-						value: item.description,
+						key: item.club.id,
+						text: item.club.name,
+						value: item.club.id,
 					}
 				})
-
-			this.setState({ sports: sport })
+			this.setState({ clubs: club })
 		})
-		{
-			let url = 'http://34.65.176.55:8081/api/club/clubs/'
-			const token = localStorage.getItem('token')
-			axios.get(url, { headers: { Authorization: token } }).then((response) => {
-				let club =
-					response &&
-					response.data &&
-					response.data.map((item, index) => {
-						return {
-							key: item.id,
-							text: item.name,
-							value: item.name,
-						}
-					})
-				this.setState({ clubs: club })
-			})
-		}
+	}
+
+	componentDidMount() {
+		this.getClubs()
 	}
 	addClickedHandler = () => {
 		if (
@@ -165,7 +154,8 @@ class ModalAthletes extends Component {
 			this.state.position.length > 0 &&
 			this.state.age.length > 0 &&
 			this.state.height.length > 0 &&
-			this.state.weight.length > 0
+			this.state.weight.length > 0 &&
+			this.state.club.length > 0
 		) {
 			const token = localStorage.getItem('token')
 			if (!this.props.editPlayer) {
@@ -181,6 +171,7 @@ class ModalAthletes extends Component {
 							position: this.state.position,
 							rating: this.state.rating,
 							date_of_birth: this.state.date_of_birth,
+							club_id: this.state.club,
 						},
 						{
 							headers: {
@@ -209,6 +200,7 @@ class ModalAthletes extends Component {
 							position: this.state.position,
 							rating: this.state.rating,
 							date_of_birth: this.state.date_of_birth,
+							club_id: this.state.club,
 						},
 						{
 							headers: {
@@ -226,6 +218,7 @@ class ModalAthletes extends Component {
 					})
 			}
 		}
+		this.cancelClickedHandler()
 	}
 
 	cancelClickedHandler = () => {
@@ -239,6 +232,7 @@ class ModalAthletes extends Component {
 			height: '',
 			weight: '',
 			rating: '',
+			club: '',
 		})
 
 		this.setState({
@@ -279,6 +273,7 @@ class ModalAthletes extends Component {
 				age: nextProps.playerToEdit.age.toString(),
 				salary: nextProps.playerToEdit.salary.toString(),
 				idForDelete: nextProps.playerToEdit.id,
+				club: nextProps.playerToEdit.club_id,
 			})
 		}
 	}
@@ -416,7 +411,8 @@ class ModalAthletes extends Component {
 											options={this.state.clubs || []}
 											className='input-description'
 											label='Assign to a club'
-											placeholder='Input placeholder'
+											placeholder='clubs'
+											value={this.state.club}
 											onChange={this.ClubHandler}
 										/>
 										<h3>Avatar Image</h3>

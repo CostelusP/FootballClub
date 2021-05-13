@@ -23,7 +23,6 @@ const LogOut = styled.div`
 	cursor: pointer;
 `
 const PagesTitle = styled.h2`
-	width: 177px;
 	height: 42px;
 	margin-left: 30px !important;
 	margin-top: 30px !important;
@@ -99,6 +98,9 @@ const LineSecondLabel = styled.label`
 	align-items: right;
 	color: #000000;
 	margin-left: 60px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 `
 const LineFirstLabel = styled.label`
 	font-family: Inter;

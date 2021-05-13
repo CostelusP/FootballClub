@@ -11,9 +11,6 @@
     0px 1.34018px 2.90372px rgba(0, 0, 0, 0.0298054),
     0px 6px 13px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
-
-  /* Inside Auto Layout */
-
   flex: none;
   order: 0;
   align-self: center;
@@ -101,18 +98,25 @@ a.linkStyle :hover {
   height: 24px;
   left: 0px;
   top: 94px;
-
-  /* inter/paragraph */
-
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
   line-height: 24px;
-  /* identical to box height, or 171% */
-
   display: flex;
   align-items: center;
-
   color: #000000;
+}
+
+.h4-club{
+  margin-top:0px;
+  margin-left:10px;
+  color: #8e9296;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+}
+.h5-club{
+  margin-top: 0px;
 }

@@ -53,6 +53,7 @@ const PersonClubThumbnail = (props) => {
 				</Card.Content>
 			</Card>
 			<PersonThumbnail
+				key={props.idUser + 'children'}
 				showModal={show}
 				hideModal={hideModal}
 				full_name={props.full_name}
