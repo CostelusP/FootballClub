@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import ClubThumbnail from './ClubThumbnail'
 import { Grid, GridRow, Input } from 'semantic-ui-react'
 import { GridColumn } from 'semantic-ui-react'
-import ModalAdded from '../modals/ModalAdded'
 import axios from 'axios'
 import './Club.css'
 import { Button, PagesContent, PagesTitle } from '../styledComponents'
@@ -12,10 +11,8 @@ import { Button, PagesContent, PagesTitle } from '../styledComponents'
 class Club extends Component {
 	state = {
 		show: false,
-		showAdd: false,
 		clubs: [],
-		searchString: '',
-		clubAdded: '',
+		search: '',
 	}
 
 	showModal = () => {
@@ -23,23 +20,15 @@ class Club extends Component {
 	}
 
 	hideModal = () => {
-		this.setState({ show: false, showAdd: false })
-	}
-
-	hideAddConfirm = () => {
-		this.getClub()
-		this.setState({
-			show: false,
-			showAdd: true,
-		})
+		this.setState({ show: false })
 	}
 
 	searchStringHandler = (e) => {
-		this.setState({ searchString: e.target.value })
+		this.setState({ search: e.target.value })
 	}
 
 	getClubs = () => {
-		let url = `http://localhost:3100/clubs/?search=${this.state.searchString}`
+		let url = `http://localhost:3100/clubs/?search=${this.state.search}`
 		const token = localStorage.getItem('token')
 		axios
 			.get(url, {
@@ -48,23 +37,18 @@ class Club extends Component {
 				},
 			})
 			.then((response) => {
-				console.log(response.data)
 				this.setState({
 					clubs: response.data,
 				})
 			})
 	}
 
-	setClubAdded = (response) => {
-		this.setState({ clubAdded: response })
-	}
-
 	componentDidMount() {
 		this.getClubs()
 	}
 
-	componentDidUpdate(prevProps, prevState) {
-		if (prevState.searchString !== this.state.searchString) {
+	componentDidUpdate(_, prevState) {
+		if (prevState.search !== this.state.search) {
 			this.getClubs()
 		}
 	}
@@ -83,7 +67,6 @@ class Club extends Component {
 									icon={{
 										name: 'search',
 										link: true,
-										onClick: this.searchHandler,
 									}}
 									onChange={this.searchStringHandler}
 									placeholder='Search...'
@@ -97,26 +80,16 @@ class Club extends Component {
 					<ModalAddClub
 						showModal={this.state.show}
 						hideModal={this.hideModal}
-						hideAddConfirm={this.hideAddConfirm}
 						name={'Add Club'}
-						action={'Add'}
-						editForm={false}
-						clubAdded={this.setClubAdded}
-						object={[]}
-					/>
-					<ModalAdded
-						hideAddConfirm={this.state.showAdd}
-						hideModal={this.hideModal}
-						name={'Club added'}
-						description={`Your club with name ${this.state.clubAdded} has been succesfully added in the system.`}
-						object={this.props.object}
+						action={'ADD'}
+						getClubs={this.getClubs}
 					/>
 					<div className='grid-container'>
 						{this.state.clubs &&
-							this.state.clubs.map((club, index) => (
+							this.state.clubs.map((club, _) => (
 								<Link to={`/clubs/${club.club.id}`} className='linkStyle'>
 									<ClubThumbnail
-										key={index}
+										key={club.club.id + '-club_person'}
 										name={club.club.name}
 										description={club.club.description}
 										coach={club.coach.user_name || '-'}

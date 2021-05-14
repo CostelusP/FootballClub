@@ -9,24 +9,26 @@ import { CancelButton, Button, DeleteButton } from '../styledComponents'
 
 class ModalAddCoach extends Component {
 	state = {
-		show: false,
+		showDelete: false,
 		showAdd: false,
 		emailValidation: true,
 		passwordValidation: true,
 		confirmPasswordValidation: true,
 		user_name: '',
 		confirm_password: '',
-		nameAdded: '',
 		email_address: '',
 		password: '',
 		idDeleted: -1,
 		error: null,
 	}
 
-	hideModal = () => {
+	hideModalDeleted = () => {
 		this.setState({
-			show: false,
 			showDelete: false,
+		})
+	}
+	hideModalAdded = () => {
+		this.setState({
 			showAdd: false,
 		})
 	}
@@ -108,35 +110,14 @@ class ModalAddCoach extends Component {
 	nameHandler = (event) => {
 		this.setState({
 			user_name: event.target.value,
-			nameAdded: event.target.value,
 		})
-	}
-
-	nameHandle = (nameReceived) => {
-		this.props.nameSet(nameReceived)
-		this.showConfirmation()
-	}
-
-	showConfirmation = () => {
-		this.props.hideAddConfirm()
-		this.props.coachesHandler()
 	}
 
 	hideAddConfirm = () => {
 		this.setState({ showAdd: true })
-		this.props.hideConfirmEdit()
 	}
 
 	addClickedHandler = () => {
-		console.log(
-			this.state.emailValidation,
-			this.state.passwordValidation,
-			this.state.confirmPasswordValidation,
-			!!this.state.confirm_password,
-			!!this.state.password,
-			!!this.state.email_address,
-			!!this.state.user_name
-		)
 		if (
 			this.state.emailValidation &&
 			this.state.passwordValidation &&
@@ -162,18 +143,18 @@ class ModalAddCoach extends Component {
 							},
 						}
 					)
-					.then((response) => {
+					.then((_) => {
 						this.setState({
 							email_address: '',
 							user_name: '',
 							password: '',
 							confirm_password: '',
+							showAdd: true,
 						})
-						this.hideAddConfirm()
 						this.props.coachesHandler()
+						this.props.hideModal()
 					})
 					.catch((error) => {
-						console.log('Eroare')
 						this.setState({ error: error.response.data.message })
 					})
 			} else {
@@ -191,15 +172,16 @@ class ModalAddCoach extends Component {
 							},
 						}
 					)
-					.then((response) => {
+					.then((_) => {
 						this.setState({
-							nameAdded: this.state.nameAdded,
 							email_address: '',
 							user_name: '',
 							password: '',
 							confirm_password: '',
+							showAdd: true,
 						})
-						this.nameHandle(this.state.nameAdded)
+						this.props.coachesHandler()
+						this.props.hideModal()
 					})
 					.catch((error) => {
 						this.setState({ error: error.response.data.message })
@@ -218,23 +200,19 @@ class ModalAddCoach extends Component {
 				password: 'TestStrong*/&',
 				email_address: nextProps.personToEdit.email_address,
 				confirm_password: 'true',
-				error: null,
 			})
 		}
 	}
 
 	exitHandler = () => {
-		this.setState(
-			{
-				email: '',
-				firstName: '',
-				lastName: '',
-				emailValidation: true,
-				firstNameValidation: true,
-				lastNameValidation: true,
-			},
-			function () {}
-		)
+		this.setState({
+			email: '',
+			firstName: '',
+			lastName: '',
+			emailValidation: true,
+			firstNameValidation: true,
+			lastNameValidation: true,
+		})
 		this.props.hideModal()
 	}
 
@@ -243,8 +221,8 @@ class ModalAddCoach extends Component {
 			email: '',
 			firstName: '',
 			lastName: '',
+			showDelete: true,
 		})
-		this.props.hideDeleteConfirm()
 	}
 
 	render() {
@@ -372,16 +350,17 @@ class ModalAddCoach extends Component {
 				</Modal.Content>
 				<ModalAdded
 					hideAddConfirm={this.state.showAdd}
-					hideModal={this.hideModal}
+					hideModal={this.hideModalAdded}
 					name={'Coach edited'}
+					description={'Coach ' + this.state.user_name + ' was added'}
 				/>
 				<ModalDeleted
 					showDelete={this.state.showDelete}
 					itemsHandler={this.props.coachesHandler}
 					hideModal={this.props.hideModal}
-					hideModalDeleted={this.props.hideModalDeleted}
+					hideModalDeleted={this.hideModalDeleted}
 					title={'Delete Coach'}
-					name={this.state.nameDeleted}
+					name={this.state.user_name}
 					confirmDeleteItem={this.deleteItem}
 					description={
 						'If you delete coach’s account, all data associated with this profile will permanently deleted.'

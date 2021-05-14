@@ -13,6 +13,7 @@ import ModalAthletes from '../../modals/ModalAthletes'
 const PersonClubThumbnail = (props) => {
 	const [show, setShow] = useState(false)
 	const [showModal, setShowModal] = useState(false)
+
 	const hideModal = () => {
 		setShow(false)
 	}
@@ -20,7 +21,6 @@ const PersonClubThumbnail = (props) => {
 		setShowModal(false)
 	}
 	const setShowModalOrCard = () => {
-		console.log(props.handleOpenModal)
 		if (props.isFrom === 'Player') return setShowModal(!showModal)
 		return setShow(!show)
 	}
@@ -66,18 +66,12 @@ const PersonClubThumbnail = (props) => {
 				salary={props.salary}
 				idUser={props.idUser}
 				idClub={props.idClub}
-				requested={props.requested}
 			/>
 			<ModalAthletes
 				nameModalAthletes='Edit Player'
 				playerToEdit={props.playerToEdit}
 				handleOpenModal={showModal}
 				handleCloseModal={handleCloseModal}
-				showModal={props.show}
-				hideModal={props.hideModal}
-				hideAddConfirm={props.hideAddConfirm}
-				addAthlete={props.addAthlete}
-				inClub={props.AddInClub}
 				editPlayer={true}
 				playersHandler={props.playersHandler}
 			/>

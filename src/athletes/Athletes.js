@@ -4,8 +4,6 @@ import axios from 'axios'
 import { Pagination, Input, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import PersonClubThumbnail from '../clubs/selected-club/CardPerson'
 import ModalAthletes from '../modals/ModalAthletes'
-import ModalAdded from '../modals/ModalAdded'
-import ModalDeleted from '../modals/ModalDeleted'
 import {
 	Button,
 	PagesContent,
@@ -15,47 +13,20 @@ import {
 
 class Athletes extends Component {
 	state = {
-		membersClicked: false,
 		show: false,
-		showDelete: false,
 		players: [],
 		page: 1,
 		numberpages: 0,
 		search: '',
-		addAthlete: '',
-		inClub: '',
-	}
-
-	handleOpenModal = () => {
-		this.setState({ show: true })
-	}
-
-	handleCloseModal = () => {
-		this.setState({ show: false })
 	}
 
 	showModal = () => {
 		this.setState({ show: true })
 	}
+
 	hideModal = () => {
 		this.setState({
 			show: false,
-			showDelete: false,
-			showAdd: false,
-		})
-	}
-
-	hideAddConfirm = () => {
-		this.setState({
-			show: false,
-			showAdd: true,
-		})
-	}
-
-	hideDeleteConfirm = () => {
-		this.setState({
-			show: false,
-			showDelete: true,
 		})
 	}
 
@@ -67,27 +38,23 @@ class Athletes extends Component {
 			this.setState({ numberpages: response.data.page_number })
 		})
 	}
+
 	componentDidMount() {
 		this.playersHandler()
 	}
+
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.search !== this.state.search) {
 			this.setState({ search: prevProps.search })
 			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12&clubId=null&isFrom=null`
 			const token = localStorage.getItem('token')
-			axios
-				.get(
-					url,
-					{ club_id: null, is_From: null },
-					{ headers: { Authorization: token } }
-				)
-				.then((response) => {
-					console.log(response.data)
-					this.setState({ players: response.data.players })
-					this.setState({ numberpages: response.data.page_number })
-				})
+			axios.get(url).then((response) => {
+				this.setState({ players: response.data.players })
+				this.setState({ numberpages: response.data.page_number })
+			})
 		}
 	}
+
 	setNumPage = (event, { activePage }) => {
 		this.setState({ page: activePage })
 		let url = `http://localhost:3100/players/?page=${activePage}&search=default&limit=12&clubId=null&isFrom=null`
@@ -106,15 +73,11 @@ class Athletes extends Component {
 				console.log(error)
 			})
 	}
+
 	hadleInput = (date) => {
 		this.setState({ search: date.target.value })
 	}
-	AthleteIsAdded = (response) => {
-		this.setState({ addAthlete: response })
-	}
-	AddInClub = (response) => {
-		this.setState({ inClub: response })
-	}
+
 	render() {
 		return (
 			<PagesContent>
@@ -134,7 +97,7 @@ class Athletes extends Component {
 							/>
 						</GridColumn>
 						<GridColumn floated='right' align='right' computer='6' tablet='8'>
-							<Button onClick={this.handleOpenModal}>ADD NEW</Button>
+							<Button onClick={this.showModal}>ADD NEW</Button>
 						</GridColumn>
 					</GridRow>
 				</Grid>
@@ -143,24 +106,20 @@ class Athletes extends Component {
 					nameModalAthletes='Create Player'
 					playerToEdit={null}
 					handleOpenModal={this.state.show}
-					handleCloseModal={this.handleCloseModal}
-					showModal={this.state.show}
-					hideModal={this.hideModal}
-					hideAddConfirm={this.hideAddConfirm}
-					addAthlete={this.AthleteIsAdded}
+					handleCloseModal={this.hideModal}
 					playersHandler={this.playersHandler}
 				/>
 
 				<div className='persons-atheltes'>
 					{this.state.players &&
-						this.state.players.map((player, index) => {
+						this.state.players.map((player, _) => {
 							const date_birth = player.date_of_birth
 								.substring(0, player.date_of_birth.indexOf('T'))
 								.split('-')
 							const date_of_birth = `${date_birth[2]}.${date_birth[1]}.${date_birth[0]}`
 							return (
 								<PersonClubThumbnail
-									key={player.id}
+									key={player.id + 'club-thumb'}
 									full_name={player.full_name}
 									age={player.age}
 									position={player.position}
@@ -170,13 +129,6 @@ class Athletes extends Component {
 									rating={player.rating}
 									salary={player.salary}
 									isFrom='Player'
-									handleOpenModal={this.state.show}
-									handleCloseModal={this.handleCloseModal}
-									showModal={this.state.show}
-									hideModal={this.hideModal}
-									hideAddConfirm={this.hideAddConfirm}
-									addAthlete={this.AthleteIsAdded}
-									inClub={this.AddInClub}
 									playerToEdit={player}
 									playersHandler={this.playersHandler}
 								/>

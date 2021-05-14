@@ -16,7 +16,6 @@ export default class CoachTable extends Component {
 		id: 0,
 		direction: null,
 		show: false,
-		showAdd: false,
 		search: '',
 		showDelete: false,
 		coaches: [],
@@ -26,20 +25,13 @@ export default class CoachTable extends Component {
 		idDeleted: -1,
 		delete: false,
 		numberPages: 0,
-		personToEdit: [],
+		personToEdit: {},
 	}
 
 	token = localStorage.getItem('token')
 
 	nameHandle = (nameReceived) => {
 		this.setState({ name: nameReceived })
-	}
-
-	showModalEdit = (prs) => {
-		this.setState({
-			show: true,
-			personToEdit: prs,
-		})
 	}
 
 	showModal = () => {
@@ -51,8 +43,6 @@ export default class CoachTable extends Component {
 	hideModal = () => {
 		this.setState({
 			show: false,
-
-			showAdd: false,
 		})
 	}
 	hideModalDeleted = () => {
@@ -77,27 +67,20 @@ export default class CoachTable extends Component {
 		}
 	}
 
-	hideDeleteConfirm = (e, index) => {
+	deleteHandler = (e, index) => {
 		this.setState({
 			idDeleted: this.state.coaches_page[index].id,
 			nameDeleted: this.state.coaches_page[index].user_name,
-			show: false,
 			showDelete: true,
 		})
 		this.deleteItem()
 	}
 
-	hideConfirmEdit = () => {
-		this.setState({ show: false })
-	}
-
 	editHandler = (e, index) => {
-		this.setState(
-			{ personToEdit: this.state.coaches_page[index] },
-			function () {}
-		)
-		console.log(this.state.coaches_page[index])
-		this.showModalEdit(this.state.coaches_page[index])
+		this.setState({
+			personToEdit: this.state.coaches_page[index],
+			show: true,
+		})
 	}
 
 	handleSort = (clickedColumn) => () => {
@@ -208,7 +191,7 @@ export default class CoachTable extends Component {
 										/>
 										<img
 											alt=''
-											onClick={(e) => this.hideDeleteConfirm(e, index)}
+											onClick={(e) => this.deleteHandler(e, index)}
 											src={trash_icon}
 											id={index}
 										/>
@@ -231,13 +214,8 @@ export default class CoachTable extends Component {
 					coachesHandler={this.coachesHandler}
 					showModal={this.state.show}
 					hideModal={this.hideModal}
-					hideModalDeleted={this.hideModalDeleted}
-					hideConfirmEdit={this.hideConfirmEdit}
-					hideAddConfirm={this.hideAddConfirm}
-					hideDeleteConfirm={(e) => this.hideDeleteConfirm}
-					id={this.state.id}
 					name={'Edit Coach'}
-					action={'Save'}
+					action={'EDIT'}
 					editForm={true}
 				/>
 

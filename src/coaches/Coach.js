@@ -44,10 +44,6 @@ class Coach extends Component {
 		this.setState({ searchString: e.target.value })
 	}
 
-	searchHandler = () => {
-		this.setState({ searchOk: true })
-	}
-
 	handlerCoachesChild = () => {
 		this.childTable.current.coachesHandler()
 	}
@@ -65,7 +61,6 @@ class Coach extends Component {
 								icon={{
 									name: 'search',
 									link: true,
-									onClick: this.searchHandler,
 								}}
 								onChange={this.searchStringHandler}
 								placeholder='Search...'
@@ -86,13 +81,10 @@ class Coach extends Component {
 				<ModalAddCoach
 					showModal={this.state.show}
 					hideModal={this.hideModal}
-					hideAddConfirm={this.hideAddConfirm}
 					coachesHandler={this.handlerCoachesChild}
 					name={'Add Coach'}
 					action={'Add'}
 					editForm={false}
-					object={[]}
-					nameSet={this.nameHandle}
 				/>
 				<ModalAdded
 					hideAddConfirm={this.state.showAdd}

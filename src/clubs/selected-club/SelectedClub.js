@@ -4,41 +4,27 @@ import { GridColumn } from 'semantic-ui-react'
 import './selected-club.css'
 import PersonClubThumbnail from './CardPerson'
 import header_icon from '../../assets/edit.svg'
-import ModalDeleted from '../../modals/ModalDeleted'
-import ModalAdded from '../../modals/ModalAdded'
-import Axios from 'axios'
+import axios from 'axios'
 import { PagesContent, PagesTitle, PaginationDiv } from '../../styledComponents'
 import ModalAddClub from '../../modals/ModalAddClub'
 
 class SelectedClub extends Component {
 	state = {
-		membersClicked: false,
 		show: false,
-		showDelete: false,
-		showAdd: false,
 		players: [],
 		club: {},
-		request: false,
-		owner: '',
 		page: 1,
 		numberPages: 0,
 		search: '',
 	}
+
 	showModal = () => {
 		this.setState({ show: true })
 	}
+
 	hideModal = () => {
 		this.setState({
 			show: false,
-			showDelete: false,
-			showAdd: false,
-		})
-	}
-
-	hideAddConfirm = () => {
-		this.setState({
-			show: false,
-			showAdd: true,
 		})
 	}
 
@@ -47,13 +33,13 @@ class SelectedClub extends Component {
 		const id = id_array[2]
 		let url = `http://localhost:3100/clubs/club/${id}`
 		const token = localStorage.getItem('token')
-		Axios.get(url, {
-			headers: {
-				Authorization: token,
-			},
-		})
+		axios
+			.get(url, {
+				headers: {
+					Authorization: token,
+				},
+			})
 			.then((response) => {
-				console.log('aici', response.data)
 				this.setState({
 					club: response.data,
 				})
@@ -62,17 +48,18 @@ class SelectedClub extends Component {
 				// alert(error)
 			})
 	}
+
 	playersHandler = () => {
 		const id_array = window.location.pathname.split('/')
 		const id = id_array[2]
 		let url = `http://localhost:3100/players/?page=1&search=default&limit=12&clubId=${id}&isFrom=Club`
 		const token = localStorage.getItem('token')
-		Axios.get(url, { headers: { Authorization: token } }).then((response) => {
-			console.log('aaaaa', response.data)
+		axios.get(url, { headers: { Authorization: token } }).then((response) => {
 			this.setState({ players: response.data.players })
 			this.setState({ numberPages: response.data.page_number })
 		})
 	}
+
 	componentDidMount() {
 		this.getClub()
 		this.playersHandler()
@@ -86,18 +73,11 @@ class SelectedClub extends Component {
 			console.log(this.state.search)
 			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12&clubId=${id}&isFrom=Club`
 			const token = localStorage.getItem('token')
-			Axios.get(url, { headers: { Authorization: token } }).then((response) => {
-				console.log(response.data)
+			axios.get(url, { headers: { Authorization: token } }).then((response) => {
 				this.setState({ players: response.data.players })
 				this.setState({ numberpages: response.data.page_number })
 			})
 		}
-	}
-
-	showDeleteConfirm = () => {
-		this.setState({
-			showDelete: true,
-		})
 	}
 
 	setNumPage = (event, { activePage }) => {
@@ -106,11 +86,12 @@ class SelectedClub extends Component {
 		this.setState({ page: activePage })
 		let url = `http://localhost:3100/players/?page=${activePage}&search=default&limit=12&clubId=${id}&isFrom=Club`
 		const token = localStorage.getItem('token')
-		Axios.get(url, {
-			headers: {
-				Authorization: token,
-			},
-		})
+		axios
+			.get(url, {
+				headers: {
+					Authorization: token,
+				},
+			})
 			.then((response) => {
 				this.setState({ players: response.data.players })
 				this.setState({ numberPages: response.data.page_number })
@@ -119,8 +100,9 @@ class SelectedClub extends Component {
 				console.log(error)
 			})
 	}
-	hadleInput = (date) => {
-		this.setState({ search: date.target.value })
+
+	hadleInput = (data) => {
+		this.setState({ search: data.target.value })
 	}
 
 	render() {
@@ -129,7 +111,7 @@ class SelectedClub extends Component {
 				<div style={{ display: 'flex' }}>
 					<PagesTitle>{this.state.club.club?.name}</PagesTitle>
 					<img
-						alt='editClub'
+						alt='edit-club'
 						src={header_icon}
 						className='icon-header'
 						onClick={this.showModal}
@@ -151,7 +133,6 @@ class SelectedClub extends Component {
 									icon={{
 										name: 'search',
 										link: true,
-										onClick: this.hadleInput,
 									}}
 									onChange={this.hadleInput}
 									placeholder='Search...'
@@ -163,37 +144,22 @@ class SelectedClub extends Component {
 				<ModalAddClub
 					showModal={this.state.show}
 					hideModal={this.hideModal}
-					hideDeleteConfirm={this.hideDeleteConfirm}
-					hideAddConfirm={this.hideAddConfirm}
 					name={'Edit Club'}
-					action={'Save'}
-					editForm={true}
+					action={'EDIT'}
 					clubToEdit={this.state.club.club}
 					getClub={this.getClub}
 				/>
-				<ModalDeleted
-					hideAddConfirm={this.state.showDelete}
-					hideModal={this.hideModal}
-				/>
-				<ModalAdded
-					hideAddConfirm={this.state.showAdd}
-					hideModal={this.hideModal}
-					name={'Club modified'}
-					description={
-						'Your club with name “Biking Club” has been succesfully modified in the system.'
-					}
-				/>
+
 				<div className='persons-grid'>
 					{this.state.players &&
 						this.state.players.map((player, index) => {
-							console.log(player, 'asfs')
 							const date_birth = player.date_of_birth
 								.substring(0, player.date_of_birth.indexOf('T'))
 								.split('-')
 							const date_of_birth = `${date_birth[2]}.${date_birth[1]}.${date_birth[0]}`
 							return (
 								<PersonClubThumbnail
-									key=''
+									key={index + '-person'}
 									full_name={player.full_name}
 									age={player.age}
 									position={player.position}
@@ -206,7 +172,6 @@ class SelectedClub extends Component {
 							)
 						})}
 				</div>
-
 				<PaginationDiv>
 					<Pagination
 						totalPages={this.state.numberPages}

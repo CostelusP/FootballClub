@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Modal } from 'semantic-ui-react'
 import personImage from '../assets/person.jpg'
 import './PersonThumbnail.css'
-import Axios from 'axios'
 import {
 	GridPlayers,
 	LineFirstLabel,

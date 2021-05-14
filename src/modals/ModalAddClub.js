@@ -9,7 +9,6 @@ import ModalDeleted from './ModalDeleted'
 
 class ModalAddClub extends Component {
 	state = {
-		clicked: false,
 		name: '',
 		description: '',
 		nameValidation: true,
@@ -17,16 +16,6 @@ class ModalAddClub extends Component {
 		showAdded: false,
 		showDeleted: false,
 		idForDelete: -1,
-	}
-
-	role = localStorage.getItem('role')
-
-	handleId = (id_received) => {
-		this.setState({ id: id_received })
-	}
-
-	setClubAdded = () => {
-		this.props.clubAdded(this.state.name)
 	}
 
 	nameHandler = (e) => {
@@ -66,14 +55,7 @@ class ModalAddClub extends Component {
 		}
 	}
 
-	addAnother = () => (
-		<div>
-			<Icon color='grey' name='plus' />
-			<label onClick={this.inviteHandler}> Add another</label>
-		</div>
-	)
-
-	hideModal = () => {
+	hideModalAdded = () => {
 		this.setState({
 			showAdded: false,
 		})
@@ -100,30 +82,51 @@ class ModalAddClub extends Component {
 			!!this.state.description
 		)
 			if (this.props.name === 'Edit Club') {
+				Axios.put(
+					`http://localhost:3100/clubs/editClub/?id=${this.props.clubToEdit.id}`,
+					{
+						name: this.state.name,
+						description: this.state.description,
+					},
+					{
+						headers: {
+							Authorization: token,
+						},
+					}
+				)
+					.then(() => {
+						this.setState({ showAdded: true })
+						this.props.getClub()
+						this.props.hideModal()
+					})
+					.catch((error) => {
+						alert(error)
+					})
+			} else {
+				Axios.post(
+					`http://localhost:3100/clubs/createClub`,
+					{
+						name: this.state.name,
+						description: this.state.description,
+					},
+					{
+						headers: {
+							Authorization: token,
+						},
+					}
+				)
+					.then(() => {
+						this.setState({ showAdded: true })
+						this.props.getClubs()
+						this.props.hideModal()
+					})
+					.catch((error) => {
+						alert(error)
+					})
 			}
-		Axios.put(
-			`http://localhost:3100/clubs/editClub/?id=${this.props.clubToEdit.id}`,
-			{
-				name: this.state.name,
-				description: this.state.description,
-			},
-			{
-				headers: {
-					Authorization: token,
-				},
-			}
-		)
-			.then((response) => {
-				this.setState({ showAdded: true })
-				this.props.getClub()
-				this.props.hideModal()
-			})
-			.catch((error) => {
-				alert(error)
-			})
 	}
 
-	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+	UNSAFE_componentWillReceiveProps(nextProps, _) {
 		if (
 			this.props.clubToEdit !== nextProps.clubToEdit &&
 			nextProps.clubToEdit !== null
@@ -165,7 +168,7 @@ class ModalAddClub extends Component {
 							<div>
 								<img
 									src={close_icon}
-									alt=''
+									alt='add-club'
 									className='close-icon'
 									onClick={this.props.hideModal}
 								/>
@@ -208,7 +211,7 @@ class ModalAddClub extends Component {
 									<hr className='second-line'></hr>
 									<div className='modal-form-buttons'>
 										<div className='modal-form-buttons'>
-											{this.props.editForm ? (
+											{this.props.name === 'Edit Club' ? (
 												<DeleteButton
 													style={{ float: 'left', marginTop: '10px' }}
 													onClick={this.showModalDeleted}
@@ -248,7 +251,7 @@ class ModalAddClub extends Component {
 				</Modal>
 				<ModalAdded
 					hideAddConfirm={this.state.showAdded}
-					hideModal={this.hideModal}
+					hideModal={this.hideModalAdded}
 					name={
 						this.props.nameModalAthletes === 'Create Club'
 							? 'Club Added'
@@ -265,7 +268,7 @@ class ModalAddClub extends Component {
 					itemsHandler={this.getClubs}
 					hideModalDeleted={this.hideModalDeleted}
 					hideModal={this.props.hideModal}
-					title={'Club player'}
+					title={'Delete club'}
 					name={this.state.name}
 					confirmDeleteItem={this.deleteItem}
 					description={

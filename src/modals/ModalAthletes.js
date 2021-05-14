@@ -19,7 +19,6 @@ class ModalAthletes extends Component {
 		heightvalid: true,
 		weightvalid: true,
 		clubvalid: true,
-		sports: [],
 		full_name: '',
 		age: '',
 		height: '',
@@ -76,6 +75,7 @@ class ModalAthletes extends Component {
 	ClubHandler = (e, result) => {
 		this.setState({ club: result.value })
 	}
+
 	AgeHandler = (data) => {
 		this.setState({ age: data.target.value })
 	}
@@ -111,7 +111,7 @@ class ModalAthletes extends Component {
 						'Content-Type': 'application/json',
 					},
 				})
-				.then((response) => {
+				.then((_) => {
 					this.hideModal()
 				})
 				.catch((error) => {
@@ -141,6 +141,7 @@ class ModalAthletes extends Component {
 	componentDidMount() {
 		this.getClubs()
 	}
+
 	addClickedHandler = () => {
 		if (
 			this.state.namevalid &&
@@ -245,15 +246,6 @@ class ModalAthletes extends Component {
 		this.props.handleCloseModal()
 	}
 
-	deleteClickedHandler = () => {
-		this.props.hideDeleteConfirm()
-	}
-	nameHandle = (nameReceived) => {
-		this.props.nameSet(nameReceived)
-		this.setState({ nameAdded: nameReceived })
-		this.showConfirmation()
-	}
-
 	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
 		if (
 			this.props.playerToEdit !== nextProps.playerToEdit &&
@@ -277,16 +269,19 @@ class ModalAthletes extends Component {
 			})
 		}
 	}
-	hideModal = () => {
+
+	hideModalAdded = () => {
 		this.setState({
 			showAdded: false,
 		})
 	}
+
 	hideModalDeleted = () => {
 		this.setState({
 			showDeleted: false,
 		})
 	}
+
 	deleteHandler = () => {
 		this.setState({ showDeleted: true })
 	}
