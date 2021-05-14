@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-import {
-	Form,
-	Input,
-	Modal,
-} from 'semantic-ui-react'
+import { Form, Input, Modal } from 'semantic-ui-react'
 import close_icon from '../assets/close.svg'
 import axios from 'axios'
 import ModalAdded from '../modals/ModalAdded'
@@ -23,7 +19,7 @@ class ModalAddCoach extends Component {
 		nameAdded: '',
 		email_address: '',
 		password: '',
-		id: -1,
+		idDeleted: -1,
 		error: null,
 	}
 
@@ -379,15 +375,14 @@ class ModalAddCoach extends Component {
 					hideModal={this.hideModal}
 					name={'Coach edited'}
 				/>
-				{console.log('aaaa', this.state.nameDeleted)}
 				<ModalDeleted
-					hideShowDelete={this.state.showDelete}
-					coachesHandler={this.props.coachesHandler}
+					showDelete={this.state.showDelete}
+					itemsHandler={this.props.coachesHandler}
 					hideModal={this.props.hideModal}
-					setName={this.nameHandle}
+					hideModalDeleted={this.props.hideModalDeleted}
 					title={'Delete Coach'}
 					name={this.state.nameDeleted}
-					confirmDelete={this.deleteItem}
+					confirmDeleteItem={this.deleteItem}
 					description={
 						'If you delete coach’s account, all data associated with this profile will permanently deleted.'
 					}

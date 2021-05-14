@@ -1,49 +1,15 @@
 import React, { Component } from 'react'
 import { Modal } from 'semantic-ui-react'
-import checked_icon from '../assets/checkmark-circle.svg'
 import personImage from '../assets/person.jpg'
 import './PersonThumbnail.css'
 import Axios from 'axios'
+import {
+	GridPlayers,
+	LineFirstLabel,
+	LineSecondLabel,
+} from '../styledComponents'
 
 class PersonThumbnail extends Component {
-	approveHandler = () => {
-		const token = localStorage.getItem('token')
-		Axios.post(
-			'http://34.65.176.55:8081/api/club/accept/',
-			{
-				email: this.props.idUser,
-				club_id: this.props.idClub,
-				accept: '1',
-			},
-			{
-				headers: {
-					Authorization: token,
-				},
-			}
-		).then((response) => {
-			this.props.hideModal()
-		})
-	}
-
-	declineHandler = () => {
-		const token = localStorage.getItem('token')
-		Axios.post(
-			'http://34.65.176.55:8081/api/club/accept/',
-			{
-				email: this.props.idUser,
-				club_id: this.props.idClub,
-				accept: '0',
-			},
-			{
-				headers: {
-					Authorization: token,
-				},
-			}
-		).then((response) => {
-			this.props.hideModal()
-		})
-	}
-
 	render() {
 		return (
 			<div>
@@ -53,23 +19,45 @@ class PersonThumbnail extends Component {
 					onClose={this.props.hideModal}
 				>
 					<Modal.Content>
-						<img src={personImage} className='person-image' />
-						<div className='person-info'>
-							<label className='person-name'>{this.props.name}</label>
-							<p className='person-details'>
-								{this.props.gender} - {this.props.age}
-							</p>
-						</div>
+						<img alt='imagePerson' src={personImage} className='person-image' />
+						<label className='person-name'>{this.props.full_name}</label>
+						<p className='person-details'>
+							{this.props.position} - {this.props.age}
+						</p>
+
 						<div className='person-sports-div'>
 							<hr className='person-hr' />
-
-							<div className='person-sport'>
-								<label>Primary sport</label>
-								<label>Secondary sport</label>
-							</div>
-							<div className='person-sport'>
-								<label>{this.props.primary_sport}</label>
-								<label>{this.props.secondary_sport}</label>
+							<div style={{ margin: '0 auto', width: '75%' }}>
+								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
+									<LineFirstLabel>Date of birth</LineFirstLabel>
+									<LineSecondLabel style={{ marginLeft: '50px' }}>
+										{this.props.date_of_birth}
+									</LineSecondLabel>
+								</GridPlayers>
+								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
+									<LineFirstLabel>Weight</LineFirstLabel>
+									<LineSecondLabel style={{ marginLeft: '95px' }}>
+										{this.props.weight} kg
+									</LineSecondLabel>
+								</GridPlayers>
+								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
+									<LineFirstLabel>Height</LineFirstLabel>
+									<LineSecondLabel style={{ marginLeft: '99px' }}>
+										{this.props.height} m
+									</LineSecondLabel>
+								</GridPlayers>
+								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
+									<LineFirstLabel>Rating</LineFirstLabel>
+									<LineSecondLabel style={{ marginLeft: '100px' }}>
+										{this.props.rating}
+									</LineSecondLabel>
+								</GridPlayers>
+								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
+									<LineFirstLabel>Salary</LineFirstLabel>
+									<LineSecondLabel style={{ marginLeft: '97px' }}>
+										{this.props.salary}$
+									</LineSecondLabel>
+								</GridPlayers>
 							</div>
 							<hr className='person-hr' />
 						</div>
@@ -80,18 +68,6 @@ class PersonThumbnail extends Component {
 							Close
 						</button>
 					</Modal.Content>
-					{this.props.requested ? (
-						<Modal.Actions>
-							<button className='button' onClick={this.approveHandler}>
-								{' '}
-								Approve
-							</button>
-							<button className='button' onClick={this.declineHandler}>
-								{' '}
-								Decline
-							</button>
-						</Modal.Actions>
-					) : null}
 				</Modal>
 			</div>
 		)

@@ -6,13 +6,13 @@ import Events from './events/Events'
 import SelectedEvents from './events/SelectedEvents/SelectedEvents'
 import SelectedClub from './clubs/selected-club/SelectedClub'
 import Coach from './coaches/Coach'
-import Athletes from './athletes/Athletes'
+import Players from './athletes/Athletes'
 
 function App() {
 	return (
 		<div>
 			<Switch>
-				<Route path='/athletes' component={Athletes} />
+				<Route path='/players' component={Players} />
 				<Route exact path='/clubs/:id' component={SelectedClub} />
 				<Route exact path='/clubs' component={Club} />
 				<Route path='/coach' component={Coach} />

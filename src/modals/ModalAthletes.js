@@ -4,101 +4,63 @@ import { Modal, Form, Icon } from 'semantic-ui-react'
 import './ModalAthletes.css'
 import axios from 'axios'
 import close_icon from '../assets/close.svg'
+import { Button, CancelButton, DeleteButton } from '../styledComponents'
+import { date } from 'yup'
+import ModalAdded from '../modals/ModalAdded'
+import ModalDeleted from './ModalDeleted'
 
 class ModalAthletes extends Component {
 	state = {
 		namevalid: true,
-		emailvalid: true,
-		psportvalid: true,
-		ssportvalid: true,
-		gendervalid: true,
+		salaryValid: true,
+		ratingValid: true,
 		agevalid: true,
 		locationvalid: true,
 		heightvalid: true,
 		weightvalid: true,
 		clubvalid: true,
 		sports: [],
-		name: '',
-		email: '',
-		psport: '',
-		ssport: '',
-		gender: '',
+		full_name: '',
 		age: '',
 		height: '',
+		salary: '',
 		weight: '',
+		position: '',
+		date_of_birth: date,
+		rating: '',
 		clubs: [],
 		club: '',
+		showAdded: false,
+		showDeleted: false,
+		idForDelete: -1,
 	}
-	optionsGender = [
-		{ key: 'm', text: 'Male', value: 'Male' },
-		{ key: 'f', text: 'Female', value: 'Female' },
-	]
+
 	NameHandler = (data) => {
 		if (/^[a-zA-Z ]+$/.test(data.target.value)) {
 			this.setState({ namevalid: true })
-			this.setState({ name: data.target.value })
+			this.setState({ full_name: data.target.value })
 		} else {
 			this.setState({ namevalid: false })
 		}
 	}
-	AgeHandler = (data) => {
-		if (
-			/([1-5][0-9])/.test(data.target.value) &&
-			data.target.value.length < 3
-		) {
-			this.setState({ agevalid: true })
-			this.setState({ age: data.target.value })
+	SalaryHandler = (data) => {
+		if (/^[0-9]*$/.test(data.target.value)) {
+			this.setState({ salaryValid: true })
+			this.setState({ salary: data.target.value })
 		} else {
-			this.setState({ agevalid: false })
+			this.setState({ salaryValid: false })
 		}
 	}
 
-	EmailHandler = (data) => {
-		if (
-			/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.target.value)
-		) {
-			this.setState({ emailvalid: true })
-			this.setState({ email: data.target.value })
+	RatingHandler = (data) => {
+		if (/^[0-9]*$/.test(data.target.value)) {
+			this.setState({ ratingValid: true })
+			this.setState({ rating: data.target.value })
 		} else {
-			this.setState({ emailvalid: false })
+			this.setState({ ratingValid: false })
 		}
 	}
 
-	PsportHandler = (data, { value }) => {
-		if (/^[a-zA-Z ]+$/.test(data.target.value)) {
-			this.setState({ psportvalid: true })
-			this.setState({ psport: value })
-		} else {
-			this.setState({ psportvalid: false })
-		}
-	}
-
-	SsportHandler = (data, { value }) => {
-		if (/^[a-zA-Z ]+$/.test(data.target.value)) {
-			this.setState({ ssportvalid: true })
-			this.setState({ ssport: value })
-		} else {
-			this.setState({ ssportvalid: false })
-		}
-	}
-
-	GenderHandler = (data, { value }) => {
-		if (/^[a-zA-Z]+$/.test(data.target.value)) {
-			this.setState({ gendervalid: true })
-
-			this.setState({ gender: value })
-		} else {
-			this.setState({ gendervalid: false })
-		}
-	}
-	ClubHandler = (data, { value }) => {
-		if (value !== '') {
-			this.setState({ clubvalid: true })
-			this.setState({ club: value })
-		} else {
-			this.setState({ clubvalid: false })
-		}
-	}
 	HeightHandler = (data) => {
 		if (
 			/[1-2][0-90-9]+$/.test(data.target.value) &&
@@ -110,6 +72,20 @@ class ModalAthletes extends Component {
 		} else {
 			this.setState({ heightvalid: false })
 		}
+	}
+	ClubHandler = (e, result) => {
+		this.setState({ club: result.value })
+	}
+	AgeHandler = (data) => {
+		this.setState({ age: data.target.value })
+	}
+
+	DateHandler = (data) => {
+		this.setState({ date_of_birth: data.target.value })
+	}
+
+	PositionHandler = (data) => {
+		this.setState({ position: data.target.value })
 	}
 
 	WeightHandler = (data) => {
@@ -124,119 +100,151 @@ class ModalAthletes extends Component {
 			this.setState({ weightvalid: false })
 		}
 	}
-	AthleteIsAdded = () => {
-		this.props.addAthlete(this.state.name)
+
+	deleteItem = (deleteReceived) => {
+		if (deleteReceived) {
+			const url = `http://localhost:3100/players/deletePlayer/?id=${this.state.idForDelete}`
+			axios
+				.delete(url, {
+					headers: {
+						Authorization: this.token,
+						'Content-Type': 'application/json',
+					},
+				})
+				.then((response) => {
+					this.hideModal()
+				})
+				.catch((error) => {
+					this.setState({ error: error.response.data.message })
+				})
+		}
 	}
-	AddInClub = () => {
-		this.props.inClub(this.state.club)
-	}
-	componentDidMount() {
-		let url = 'http://34.65.176.55:8081/api/sports/'
+
+	getClubs = () => {
+		let url = 'http://localhost:3100/clubs/?search=default'
 		const token = localStorage.getItem('token')
 		axios.get(url, { headers: { Authorization: token } }).then((response) => {
-			let sport =
+			let club =
 				response &&
 				response.data &&
 				response.data.map((item, index) => {
 					return {
-						key: item.id,
-						text: item.description,
-						value: item.description,
+						key: item.club.id,
+						text: item.club.name,
+						value: item.club.id,
 					}
 				})
-			console.log(response.data, 'aaaaa')
-			this.setState({ sports: sport })
-			console.log(this.state.sports, 'asfuysaf')
+			this.setState({ clubs: club })
 		})
-		{
-			let url = 'http://34.65.176.55:8081/api/club/clubs/'
-			const token = localStorage.getItem('token')
-			axios.get(url, { headers: { Authorization: token } }).then((response) => {
-				let club =
-					response &&
-					response.data &&
-					response.data.map((item, index) => {
-						return {
-							key: item.id,
-							text: item.name,
-							value: item.name,
-						}
-					})
-				console.log(response.data, 'aaaaa')
-				this.setState({ clubs: club })
-				console.log(this.state.clubs, 'sport')
-			})
-		}
+	}
+
+	componentDidMount() {
+		this.getClubs()
 	}
 	addClickedHandler = () => {
 		if (
 			this.state.namevalid &&
-			this.state.emailvalid &&
-			this.state.psportvalid &&
-			this.state.ssportvalid &&
-			this.state.agevalid &&
-			this.state.name.length > 0 &&
-			this.state.email.length > 0 &&
+			this.state.heightvalid &&
+			this.state.weightvalid &&
+			this.state.salaryValid &&
+			this.state.ratingValid &&
+			this.state.salary.length > 0 &&
+			this.state.date_of_birth.length > 0 &&
+			this.state.full_name.length > 0 &&
+			this.state.position.length > 0 &&
 			this.state.age.length > 0 &&
 			this.state.height.length > 0 &&
-			this.state.weight.length > 0
+			this.state.weight.length > 0 &&
+			this.state.club.length > 0
 		) {
 			const token = localStorage.getItem('token')
-			axios
-				.post(
-					'http://34.65.176.55:8081/api/athlete/',
-					{
-						name: this.state.name,
-						email: this.state.email,
-						primary_sport: this.state.psport,
-						secondary_sport: this.state.ssport,
-						gender: this.state.gender,
-						age: this.state.age,
-						height: this.state.height,
-						weight: this.state.weight,
-					},
-					{
-						headers: {
-							Authorization: token,
+			if (!this.props.editPlayer) {
+				axios
+					.post(
+						'http://localhost:3100/players/createPlayer',
+						{
+							full_name: this.state.full_name,
+							age: this.state.age,
+							height: this.state.height,
+							weight: this.state.weight,
+							salary: this.state.salary,
+							position: this.state.position,
+							rating: this.state.rating,
+							date_of_birth: this.state.date_of_birth,
+							club_id: this.state.club,
 						},
-					}
-				)
-				.then((response) => {
-					this.AthleteIsAdded()
-					this.AddInClub()
-				})
-				.catch((error) => {
-					alert(error)
-				})
-
-			this.props.hideAddConfirm()
+						{
+							headers: {
+								Authorization: token,
+							},
+						}
+					)
+					.then((response) => {
+						this.props.handleCloseModal()
+						this.setState({ showAdded: true })
+						this.props.playersHandler()
+					})
+					.catch((error) => {
+						alert(error)
+					})
+			} else {
+				axios
+					.put(
+						`http://localhost:3100/players/editPlayer/?id=${this.props.playerToEdit.id}`,
+						{
+							full_name: this.state.full_name,
+							age: this.state.age,
+							height: this.state.height,
+							weight: this.state.weight,
+							salary: this.state.salary,
+							position: this.state.position,
+							rating: this.state.rating,
+							date_of_birth: this.state.date_of_birth,
+							club_id: this.state.club,
+						},
+						{
+							headers: {
+								Authorization: token,
+							},
+						}
+					)
+					.then((response) => {
+						this.props.handleCloseModal()
+						this.setState({ showAdded: true })
+						this.props.playersHandler()
+					})
+					.catch((error) => {
+						alert(error)
+					})
+			}
 		}
+		this.cancelClickedHandler()
 	}
 
 	cancelClickedHandler = () => {
-		{
-			this.setState({ img: '' })
-			this.setState({ name: '' })
-			this.setState({ gender: '' })
-			this.setState({ age: '' })
-			this.setState({ psport: '' })
-			this.setState({ ssport: '' })
-			this.setState({ height: '' })
-			this.setState({ weight: '' })
-			this.setState({ email: '' })
-		}
-		{
-			this.setState({ namevalid: true })
-			this.setState({ heightvalid: true })
-			this.setState({ gendervalid: true })
-			this.setState({ agevalid: true })
-			this.setState({ psportvalid: true })
-			this.setState({ ssportvalid: true })
-			this.setState({ weightvalid: true })
-			this.setState({ emailvalid: true })
-		}
+		this.setState({
+			img: '',
+			full_name: '',
+			salary: '',
+			age: '',
+			date_of_birth: '',
+			position: '',
+			height: '',
+			weight: '',
+			rating: '',
+			club: '',
+		})
+
+		this.setState({
+			namevalid: true,
+			ratingValid: true,
+			salaryValid: true,
+			weightvalid: true,
+			heightvalid: true,
+		})
 		this.props.handleCloseModal()
 	}
+
 	deleteClickedHandler = () => {
 		this.props.hideDeleteConfirm()
 	}
@@ -246,190 +254,263 @@ class ModalAthletes extends Component {
 		this.showConfirmation()
 	}
 
+	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+		if (
+			this.props.playerToEdit !== nextProps.playerToEdit &&
+			nextProps.playerToEdit !== null
+		) {
+			const date_birth = nextProps.playerToEdit.date_of_birth.substring(
+				0,
+				nextProps.playerToEdit.date_of_birth.indexOf('T')
+			)
+			this.setState({
+				full_name: nextProps.playerToEdit.full_name,
+				position: nextProps.playerToEdit.position,
+				rating: nextProps.playerToEdit.rating,
+				date_of_birth: date_birth,
+				weight: nextProps.playerToEdit.weight.toString(),
+				height: nextProps.playerToEdit.height.toString(),
+				age: nextProps.playerToEdit.age.toString(),
+				salary: nextProps.playerToEdit.salary.toString(),
+				idForDelete: nextProps.playerToEdit.id,
+				club: nextProps.playerToEdit.club_id,
+			})
+		}
+	}
+	hideModal = () => {
+		this.setState({
+			showAdded: false,
+		})
+	}
+	hideModalDeleted = () => {
+		this.setState({
+			showDeleted: false,
+		})
+	}
+	deleteHandler = () => {
+		this.setState({ showDeleted: true })
+	}
+
 	render() {
 		return (
-			<Modal
-				style={{ maxWidth: '600px' }}
-				open={this.props.handleOpenModal}
-				close={this.props.handleCloseModal}
-				className='modal-form'
-			>
-				<Modal.Content>
-					<Form>
-						
+			<div>
+				<Modal
+					open={this.props.handleOpenModal}
+					close={this.props.handleCloseModal}
+					className='modal-form'
+				>
+					<Modal.Content>
+						<Form>
 							<img
 								src={close_icon}
 								className='close-icon-athlete'
 								alt=''
 								onClick={this.cancelClickedHandler}
 							/>
-						
-						<div className='modal-athletes-div'>
-							<h2>{this.props.NameModalAthletes}</h2>
-							<div className='first-line-athletes'>
+							<div>
+								<h2>{this.props.nameModalAthletes}</h2>
 								<hr></hr>
-							</div>
+								<div className='modal-form-inputs'>
+									<p>General Information</p>
+									<div className='modal-form-inputs-athletes'>
+										<Form.Group widths='equal'>
+											<Form.Input
+												fluid
+												width='10'
+												label='Full Name'
+												placeholder='name'
+												error={
+													this.state.namevalid
+														? null
+														: 'The field can not be empty or contain special characters'
+												}
+												defaultValue={this.state.full_name}
+												onChange={this.NameHandler}
+											/>
+											<Form.Input
+												width='10'
+												fluid
+												label='Salary'
+												placeholder='salary'
+												defaultValue={this.state.salary}
+												error={
+													this.state.salaryValid ? null : 'Enter only digits'
+												}
+												onChange={this.SalaryHandler}
+											/>
+										</Form.Group>
 
-							<p>General Information</p>
-							<div className='modal-form-inputs-athletes'>
-								<Form.Group widths='equal'>
-									<Form.Input
-										fluid
-										label='Name'
-										placeholder='Input placeholder'
-										error={
-											this.state.namevalid
-												? null
-												: 'The field can not be empty or contain special characters'
-										}
-										onChange={this.NameHandler}
-									/>
-									<Form.Input
-										fluid
-										label='Email Adress'
-										placeholder='Input placeholder'
-										error={
-											this.state.emailvalid
-												? null
-												: 'Enter a valid email address'
-										}
-										onChange={this.EmailHandler}
-									/>
-								</Form.Group>
+										<Form.Group widths='equal'>
+											<Form.Input
+												fluid
+												label='Position'
+												placeholder='position'
+												options={this.state.sports || 'global'}
+												onChange={this.PositionHandler}
+												defaultValue={this.state.position}
+											/>
+											<Form.Input
+												fluid
+												label='Rating'
+												placeholder='rating'
+												error={
+													this.state.ratingValid
+														? null
+														: 'The field can not be empty.Enter only digits'
+												}
+												onChange={this.RatingHandler}
+												defaultValue={this.state.rating}
+											/>
+										</Form.Group>
+										<p>Personal Information </p>
+										<Form.Group widths='equal'>
+											<Form.Input
+												type='date'
+												fluid
+												label='Date of Birth'
+												placeholder='date'
+												onChange={this.DateHandler}
+												defaultValue={this.state.date_of_birth}
+											/>
+											<Form.Input
+												fluid
+												label='Age'
+												placeholder='age'
+												onChange={this.AgeHandler}
+												defaultValue={this.state.age}
+											/>
+										</Form.Group>
 
-								<Form.Group widths='equal'>
-									<Form.Select
-										fluid
-										label='Primary Sport'
-										placeholder='Input placeholder'
-										options={this.state.sports || []}
-										error={
-											this.state.psportvalid
-												? null
-												: 'The field can not be empty.Select an option'
-										}
-										onChange={this.PsportHandler}
-									/>
-									<Form.Select
-										fluid
-										options={this.state.sports || []}
-										label='Secondary Sport'
-										placeholder='Input placeholder'
-										error={
-											this.state.ssportvalid
-												? null
-												: 'The field can not be empty.Select an option'
-										}
-										onChange={this.SsportHandler}
-									/>
-								</Form.Group>
-								<p>Personal Information </p>
-								<Form.Group widths='equal'>
-									<Form.Select
-										id='gender'
-										fluid
-										label='Gender'
-										value={this.state.gender}
-										placeholder='Input placeholder'
-										options={this.optionsGender}
-										error={
-											this.state.gendervalid
-												? null
-												: 'The field can not be empty.'
-										}
-										onChange={this.GenderHandler}
-									/>
-									<Form.Input
-										fluid
-										label='Age'
-										placeholder='Input placeholder'
-										error={
-											this.state.agevalid
-												? null
-												: 'The field can not be empty and must contain only digits.The maximum value is 49'
-										}
-										onChange={this.AgeHandler}
-									/>
-								</Form.Group>
-
-								<Form.Group widths='equal'>
-									<Form.Input
-										fluid
-										label='Height'
-										placeholder='Input Placeholder'
-										error={
-											this.state.heightvalid
-												? null
-												: 'The field can not be empty and must contain minimum 3 digits.The maximum value is 299'
-										}
-										onChange={this.HeightHandler}
-									/>
-									<Form.Input
-										fluid
-										label='Weight'
-										placeholder='Input Placeholder'
-										error={
-											this.state.weightvalid
-												? null
-												: 'The field can not be empty and must contain only digits.The maximum value is 399'
-										}
-										onChange={this.WeightHandler}
-									/>
-								</Form.Group>
-								<Form.Select
-									options={this.state.clubs || []}
-									className='input-description'
-									label='Assign to a club'
-									placeholder='Input placeholder'
-									onChange={this.ClubHandler}
-								/>
-								<h3>Avatar Image</h3>
-								<Dropzone onDrop={(files) => console.log(files)}>
-									{({ getRootProps, getInputProps }) => (
-										<div className='drag-and-drop-athlets'>
-											<div
-												{...getRootProps({
-													className: 'dropzone-athletes',
-													onDrop: (event) => event.stopPropagation(),
-												})}
-											>
-												<input {...getInputProps()} />
-												<div className='upload-file-athletes'>
-													<Icon
-														name='cloud upload'
-														color='black'
-														style={{ margin: '7px' }}
-													/>
-													<p>Upload File </p>
+										<Form.Group widths='equal'>
+											<Form.Input
+												fluid
+												label='Height'
+												placeholder='height'
+												error={
+													this.state.heightvalid
+														? null
+														: 'The field can not be empty and must contain minimum 3 digits.The maximum value is 299'
+												}
+												onChange={this.HeightHandler}
+												defaultValue={this.state.height}
+											/>
+											<Form.Input
+												fluid
+												label='Weight'
+												placeholder='Input Placeholder'
+												error={
+													this.state.weightvalid
+														? null
+														: 'The field can not be empty and must contain only digits.The maximum value is 399'
+												}
+												onChange={this.WeightHandler}
+												defaultValue={this.state.weight}
+											/>
+										</Form.Group>
+										<Form.Select
+											options={this.state.clubs || []}
+											className='input-description'
+											label='Assign to a club'
+											placeholder='clubs'
+											value={this.state.club}
+											onChange={this.ClubHandler}
+										/>
+										<h3>Avatar Image</h3>
+										<Dropzone onDrop={(files) => console.log(files)}>
+											{({ getRootProps, getInputProps }) => (
+												<div className='drag-and-drop-athlets'>
+													<div
+														{...getRootProps({
+															className: 'dropzone-athletes',
+															onDrop: (event) => event.stopPropagation(),
+														})}
+													>
+														<input {...getInputProps()} />
+														<div className='upload-file-athletes'>
+															<Icon
+																name='cloud upload'
+																color='black'
+																style={{ margin: '7px' }}
+															/>
+															<p>Upload File </p>
+														</div>
+													</div>
+													<p className='drag-drop-athletes'>
+														or drag&drop here
+													</p>
 												</div>
-											</div>
-											<p className='drag-drop-athletes'>or drag&drop here</p>
+											)}
+										</Dropzone>
+										<div className='second-line-athletes'>
+											<hr></hr>
 										</div>
-									)}
-								</Dropzone>
-								<div className='second-line-athletes'>
-									<hr></hr>
-								</div>
+									</div>
 
-								<div className='modal-buttons-athletes'>
-									<button
-										className='cancel-button-athletes'
-										onClick={this.cancelClickedHandler}
-									>
-										CANCEL
-									</button>
-									<button
-										className='button-athletes-add'
-										onClick={this.addClickedHandler}
-									>
-										ADD
-									</button>
+									<div className='modal-form-buttons'>
+										{this.props.nameModalAthletes === 'Edit Player' ? (
+											<DeleteButton
+												style={{ float: 'left', marginTop: '10px' }}
+												onClick={this.deleteHandler}
+											>
+												Delete
+											</DeleteButton>
+										) : null}
+										<div
+											style={{
+												float: 'right',
+												textAlign: 'right',
+												marginTop: '10px',
+												marginBottom: '20px',
+											}}
+										>
+											<CancelButton
+												style={{ display: 'inline-block' }}
+												onClick={this.cancelClickedHandler}
+											>
+												Cancel
+											</CancelButton>
+											<Button
+												style={{ display: 'inline-block', marginRight: '0px' }}
+												onClick={this.addClickedHandler}
+											>
+												{this.props.nameModalAthletes === 'Edit Player'
+													? 'EDIT'
+													: 'ADD'}
+											</Button>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					</Form>
-				</Modal.Content>
-			</Modal>
+						</Form>
+					</Modal.Content>
+				</Modal>
+				<ModalAdded
+					hideAddConfirm={this.state.showAdded}
+					hideModal={this.hideModal}
+					name={
+						this.props.nameModalAthletes === 'Create Player'
+							? 'Player Added'
+							: 'Player Edited'
+					}
+					description={
+						this.props.nameModalAthletes === 'Create Player'
+							? `Player ${this.state.full_name} was added on ${this.state.inClub}`
+							: `Player ${this.state.full_name} was edited`
+					}
+				/>
+				<ModalDeleted
+					showDelete={this.state.showDeleted}
+					itemsHandler={this.props.playersHandler}
+					hideModalDeleted={this.hideModalDeleted}
+					hideModal={this.hideModal}
+					title={'Delete player'}
+					name={this.state.full_name}
+					confirmDeleteItem={this.deleteItem}
+					description={
+						'If you delete player, all data associated with this profile will permanently deleted.'
+					}
+				/>
+			</div>
 		)
 	}
 }
