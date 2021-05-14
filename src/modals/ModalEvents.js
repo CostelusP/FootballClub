@@ -303,7 +303,6 @@ class ModalEvents extends Component {
 									label='Date'
 									type='date'
 									value={this.props.date}
-									value={this.state.date}
 									placeholder='Input placeholder'
 									error={
 										this.state.datevalid ? null : 'The field can not be empty '
@@ -357,16 +356,6 @@ class ModalEvents extends Component {
 								onChange={this.ClubHandler}
 							/>
 
-							<div className='invite-optional'>
-								<p
-									className='invite-members'
-									onClick={() =>
-										this.setState({ clicked: !this.state.clicked })
-									}
-								>
-									Invite members
-								</p>
-							</div>
 							<p className='invite-members-optional'>(Optional)</p>
 							<div>{this.state.clicked ? this.Results() : null}</div>
 							<p className='event-cover'>Event cover</p>

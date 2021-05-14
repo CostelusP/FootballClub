@@ -13,10 +13,46 @@ import {
 	PagesTitle,
 	PaginationDiv,
 } from '../styledComponents'
-
 class Events extends Component {
+	events = [
+		{
+			name: 'Iulia Mniu',
+			description: 'aaaaaaaaaaaaaaaaaa',
+			time: '12:00',
+			date: '23.08.1999',
+		},
+		{
+			name: 'Iulia Mniu',
+			description: 'aaaaaaaaaaaaaaaaaa',
+			time: '12:00',
+			date: '23.08.1999',
+		},
+		{
+			name: 'Iulia Mniu',
+			description: 'aaaaaaaaaaaaaaaaaa',
+			time: '12:00',
+			date: '23.08.1999',
+		},
+		{
+			name: 'Iulia Mniu',
+			description: 'aaaaaaaaaaaaaaaaaa',
+			time: '12:00',
+			date: '23.08.1999',
+		},
+		{
+			name: 'Iulia Mniu',
+			description: 'aaaaaaaaaaaaaaaaaa',
+			time: '12:00',
+			date: '23.08.1999',
+		},
+		{
+			name: 'Iulia Mniu',
+			description: 'aaaaaaaaaaaaaaaaaa',
+			time: '12:00',
+			date: '23.08.1999',
+		},
+	]
 	state = {
-		membersClicked: false,
 		show: false,
 		showDelete: false,
 		showAdd: false,
@@ -191,8 +227,8 @@ class Events extends Component {
 					</GridRow>
 
 					<div className='events-component'>
-						{this.state.events &&
-							this.state.events.map((event, index) => (
+						{this.events &&
+							this.events.map((event, index) => (
 								<Link
 									to={{
 										pathname: `/event/detail/${event.id}`,
