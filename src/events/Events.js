@@ -23,7 +23,7 @@ class Events extends Component {
 		numberpages: 0,
 		page: 1,
 		search: '',
-		time: 1,
+		time: 'prezent',
 		EventAdded: '',
 		InClub: '',
 	}
@@ -36,14 +36,6 @@ class Events extends Component {
 			this.setState({ events: response.data.events })
 			this.setState({ numberpages: response.data.page_number })
 		})
-	}
-
-	AddedInClub = (response) => {
-		this.setState({ InClub: response })
-	}
-
-	showModal = () => {
-		this.setState({ show: true })
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -123,82 +115,84 @@ class Events extends Component {
 	hadleInput = (date) => {
 		this.setState({ search: date.target.value }, () => {})
 	}
+
 	render() {
 		return (
-			<PagesContent>
-				<PagesTitle>Events</PagesTitle>
-				<Grid>
-					<GridRow>
-						<GridColumn floated='left' align='left' computer='8' tablet='8'>
-							<Input
-								className='search-bar'
-								iconPosition='left'
-								icon={{
-									name: 'search',
-									link: true,
-								}}
-								onChange={this.hadleInput}
-								placeholder='Search...'
-							/>
-						</GridColumn>
-						<GridColumn floated='right' align='right' computer='6' tablet='8'>
-							<Button onClick={this.showModal}>ADD NEW</Button>
-						</GridColumn>
-					</GridRow>
-					<GridRow align='left' computer='8' tablet='8'>
-						<button
-							style={{ marginLeft: '45px' }}
-							className='but'
-							active
-							onClick={this.presshandleOngoing}
-						>
-							Ongoing
-						</button>
-						<button className='but' onClick={this.presshandleFuture}>
-							Future
-						</button>
-						<button className='but' onClick={this.presshandlePast}>
-							Past
-						</button>
-					</GridRow>
+			<div>
+				<PagesContent>
+					<PagesTitle>Events</PagesTitle>
+					<Grid>
+						<GridRow>
+							<GridColumn floated='left' align='left' computer='8' tablet='8'>
+								<Input
+									className='search-bar'
+									iconPosition='left'
+									icon={{
+										name: 'search',
+										link: true,
+									}}
+									onChange={this.hadleInput}
+									placeholder='Search...'
+								/>
+							</GridColumn>
+							<GridColumn floated='right' align='right' computer='6' tablet='8'>
+								<Button onClick={this.handleOpenModal}>ADD NEW</Button>
+							</GridColumn>
+						</GridRow>
+						<GridRow align='left' computer='8' tablet='8'>
+							<button
+								style={{ marginLeft: '45px' }}
+								className='but'
+								active
+								onClick={this.presshandleOngoing}
+							>
+								Ongoing
+							</button>
+							<button className='but' onClick={this.presshandleFuture}>
+								Future
+							</button>
+							<button className='but' onClick={this.presshandlePast}>
+								Past
+							</button>
+						</GridRow>
 
-					<div className='events-component'>
-						{this.state.events &&
-							this.state.events.map((event, index) => {
-								const event_date = event.event_date
-									.substring(0, event.event_date.indexOf('T'))
-									.split('-')
-								const date = `${event_date[2]}.${event_date[1]}.${event_date[0]}`
-								const event_time = event.event_date
-									.substring(event.event_date.indexOf('T') + 1)
-									.split(':')
-								const time = `${event_time[0]}:${event_time[1]}`
+						<div className='events-component'>
+							{this.state.events &&
+								this.state.events.map((event, index) => {
+									const event_date = event.event_date
+										.substring(0, event.event_date.indexOf('T'))
+										.split('-')
+									const date = `${event_date[2]}.${event_date[1]}.${event_date[0]}`
+									const event_time = event.event_date
+										.substring(event.event_date.indexOf('T') + 1)
+										.split(':')
+									const time = `${event_time[0]}:${event_time[1]}`
 
-								return (
-									<EventsComponent
-										cardId={event.id}
-										title={event.name}
-										body={event.description}
-										time={time}
-										date={date}
-										location={event.location}
-										eventToEdit={event}
-										isOfficial={event.is_official}
-										getEvents={this.getEvents}
-										handleCloseModal={this.handleCloseModal}
-									/>
-								)
-							})}
-					</div>
-				</Grid>
-				<PaginationDiv>
-					<Pagination
-						totalPages={this.state.numberpages}
-						onPageChange={this.setNumPage}
-						activePage={this.state.page}
-					/>
-				</PaginationDiv>
-
+									return (
+										<EventsComponent
+											cardId={event.id}
+											title={event.name}
+											body={event.description}
+											time={time}
+											date={date}
+											location={event.location}
+											eventToEdit={event}
+											isOfficial={event.is_official}
+											getEvents={this.getEvents}
+											handleCloseModal={this.handleCloseModal}
+										/>
+									)
+								})}
+						</div>
+					</Grid>
+					<PaginationDiv>
+						<Pagination
+							totalPages={this.state.numberpages}
+							onPageChange={this.setNumPage}
+							activePage={this.state.page}
+						/>
+					</PaginationDiv>
+				</PagesContent>
 				<ModalEvents
 					nameModalEvent='Add Event'
 					eventToEdit={null}
@@ -206,7 +200,7 @@ class Events extends Component {
 					handleCloseModal={this.handleCloseModal}
 					getEvents={this.getEvents}
 				/>
-			</PagesContent>
+			</div>
 		)
 	}
 }
