@@ -111,9 +111,7 @@ class ModalAthletes extends Component {
 						'Content-Type': 'application/json',
 					},
 				})
-				.then((_) => {
-					this.hideModal()
-				})
+				.then((_) => {})
 				.catch((error) => {
 					this.setState({ error: error.response.data.message })
 				})
@@ -247,6 +245,8 @@ class ModalAthletes extends Component {
 	}
 
 	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+		console.log('brbrb', nextProps)
+		console.log(this.props.playerToEdit !== nextProps.playerToEdit)
 		if (
 			this.props.playerToEdit !== nextProps.playerToEdit &&
 			nextProps.playerToEdit !== null
@@ -296,6 +296,7 @@ class ModalAthletes extends Component {
 				>
 					<Modal.Content>
 						<Form>
+							{console.log(this.props.playerToEdit)}
 							<img
 								src={close_icon}
 								className='close-icon-athlete'
@@ -497,7 +498,7 @@ class ModalAthletes extends Component {
 					showDelete={this.state.showDeleted}
 					itemsHandler={this.props.playersHandler}
 					hideModalDeleted={this.hideModalDeleted}
-					hideModal={this.hideModal}
+					hideModal={this.props.handleCloseModal}
 					title={'Delete player'}
 					name={this.state.full_name}
 					confirmDeleteItem={this.deleteItem}

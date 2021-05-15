@@ -60,59 +60,7 @@
   border: 1px solid #cad2e2;
   background: #cad2e2;
 }
-.cancel-button-athletes {
-  width: 100px;
-  height: 46px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-.cancel-button-athletes:hover {
-  border-radius: 8px;
-}
-.cancel-button-athletes:focus {
-  outline: 0;
-  border-radius: 8px;
-}
-.cancel-button-athletes:active {
-  transform: translateY(1px);
-  box-shadow: 0 5px #666;
-}
-.button-athletes-add {
-  position: relative;
-  width: 170px;
-  height: 46px;
-  background: #1a1a1a;
-  border-radius: 8px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #44dabd;
-  border: none;
-  left: 5px;
-  cursor: pointer;
-}
-.button-athletes-add:hover {
-  border-radius: 8px;
-  transform: translate(0.2);
-}
-.button-athletes-add:focus {
-  outline: 0;
-  border-radius: 8px;
-}
-.button-athletes-add:active {
-  transform: translateY(1px);
-  box-shadow: 0 5px #666;
-}
+
 .close-icon-athlete {
   cursor: pointer;
   margin-left: 530px;

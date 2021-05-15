@@ -25,7 +25,7 @@ const PersonClubThumbnail = (props) => {
 		return setShow(!show)
 	}
 	return (
-		<div className='person-club-card'>
+		<div>
 			<Card className='card-width' onClick={setShowModalOrCard}>
 				<Card.Content>
 					<Image

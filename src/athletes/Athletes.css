@@ -2,7 +2,7 @@
 
 .persons-atheltes {
   margin-top: 40px;
-  margin-left: 20px;
+  margin:20px !important;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

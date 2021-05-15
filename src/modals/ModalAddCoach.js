@@ -20,6 +20,7 @@ class ModalAddCoach extends Component {
 		password: '',
 		idDeleted: -1,
 		error: null,
+		userName: '',
 	}
 
 	hideModalDeleted = () => {
@@ -144,7 +145,9 @@ class ModalAddCoach extends Component {
 						}
 					)
 					.then((_) => {
+						this.props.hideModal()
 						this.setState({
+							userName: this.state.user_name,
 							email_address: '',
 							user_name: '',
 							password: '',
@@ -152,7 +155,6 @@ class ModalAddCoach extends Component {
 							showAdd: true,
 						})
 						this.props.coachesHandler()
-						this.props.hideModal()
 					})
 					.catch((error) => {
 						this.setState({ error: error.response.data.message })
@@ -174,14 +176,15 @@ class ModalAddCoach extends Component {
 					)
 					.then((_) => {
 						this.setState({
+							userName: this.state.user_name,
 							email_address: '',
 							user_name: '',
 							password: '',
 							confirm_password: '',
 							showAdd: true,
 						})
-						this.props.coachesHandler()
 						this.props.hideModal()
+						this.props.coachesHandler()
 					})
 					.catch((error) => {
 						this.setState({ error: error.response.data.message })
@@ -227,132 +230,142 @@ class ModalAddCoach extends Component {
 
 	render() {
 		return (
-			<Modal
-				open={this.props.showModal}
-				onClose={this.props.hideModal}
-				className='modal-form'
-			>
-				<Modal.Content>
-					<Form>
-						<div>
-							<img
-								alt=''
-								src={close_icon}
-								className='close-icon'
-								onClick={this.exitHandler}
-							/>
-						</div>
-						<div>
-							<h2>{this.props.name}</h2>
-							<hr></hr>
-							<FormError>{this.state.error ? this.state.error : ''}</FormError>
-							<div className='modal-form-inputs'>
-								<Form.Input
-									required
-									fluid
-									onChange={this.nameHandler}
-									label='User Name'
-									placeholder='User name'
-									width='16'
-									defaultValue={this.state.user_name}
+			<div>
+				<Modal
+					open={this.props.showModal}
+					onClose={this.props.hideModal}
+					className='modal-form'
+				>
+					<Modal.Content>
+						<Form>
+							<div>
+								<img
+									alt=''
+									src={close_icon}
+									className='close-icon'
+									onClick={this.exitHandler}
 								/>
-								<Form.Input
-									required
-									onChange={this.emailHandler}
-									error={
-										this.state.emailValidation
-											? null
-											: 'Enter a valid email address'
-									}
-									fluid
-									label='Email Address'
-									placeholder='Email Address'
-									width='16'
-									defaultValue={this.state.email_address}
-								/>
-								<Form.Input
-									required
-									onChange={this.passwordHandler}
-									error={
-										this.state.passwordValidation
-											? null
-											: 'Enter a strong password'
-									}
-									type='password'
-									fluid
-									label='Password'
-									placeholder='Password'
-									width='16'
-									defaultValue={this.state.password}
-								/>
-								{!this.props.editForm ? (
+							</div>
+							<div>
+								<h2>{this.props.name}</h2>
+								<hr></hr>
+								<FormError>
+									{this.state.error ? this.state.error : ''}
+								</FormError>
+								<div className='modal-form-inputs'>
 									<Form.Input
 										required
-										onChange={this.confirmPasswordHandler}
+										fluid
+										onChange={this.nameHandler}
+										label='User Name'
+										placeholder='User name'
+										width='16'
+										defaultValue={this.state.user_name}
+									/>
+									<Form.Input
+										required
+										onChange={this.emailHandler}
 										error={
-											this.state.confirmPasswordValidation
+											this.state.emailValidation
 												? null
-												: 'Password does not match'
+												: 'Enter a valid email address'
+										}
+										fluid
+										label='Email Address'
+										placeholder='Email Address'
+										width='16'
+										defaultValue={this.state.email_address}
+									/>
+									<Form.Input
+										required
+										onChange={this.passwordHandler}
+										error={
+											this.state.passwordValidation
+												? null
+												: 'Enter a strong password'
 										}
 										type='password'
 										fluid
-										label='Confirm Password'
-										placeholder='password'
+										label='Password'
+										placeholder='Password'
 										width='16'
-										defaultValue={this.state.confirm_password}
+										defaultValue={this.state.password}
 									/>
-								) : (
-									''
-								)}
-								<label>Club Assign</label>
-								<Input list='Club' placeholder='Input placeholder' fluid />
-								<datalist id='Club'>
-									<option value='English' />
-									<option value='Chinese' />
-									<option value='Dutch' />
-								</datalist>
-								<br />
-								<br />
-								<hr className='second-line'></hr>
-								<div className='modal-form-buttons'>
-									{this.props.editForm ? (
-										<DeleteButton
-											style={{ float: 'left', marginTop: '10px' }}
-											onClick={this.hideDeleteConfirm}
+									{!this.props.editForm ? (
+										<Form.Input
+											required
+											onChange={this.confirmPasswordHandler}
+											error={
+												this.state.confirmPasswordValidation
+													? null
+													: 'Password does not match'
+											}
+											type='password'
+											fluid
+											label='Confirm Password'
+											placeholder='password'
+											width='16'
+											defaultValue={this.state.confirm_password}
+										/>
+									) : (
+										''
+									)}
+									<label>Club Assign</label>
+									<Input list='Club' placeholder='Input placeholder' fluid />
+									<datalist id='Club'>
+										<option value='English' />
+										<option value='Chinese' />
+										<option value='Dutch' />
+									</datalist>
+									<br />
+									<br />
+									<hr className='second-line'></hr>
+									<div className='modal-form-buttons'>
+										{this.props.editForm ? (
+											<DeleteButton
+												style={{ float: 'left', marginTop: '10px' }}
+												onClick={this.hideDeleteConfirm}
+											>
+												Delete
+											</DeleteButton>
+										) : null}
+										<div
+											style={{
+												float: 'right',
+												textAlign: 'right',
+												marginTop: '10px',
+											}}
 										>
-											Delete
-										</DeleteButton>
-									) : null}
-									<div
-										style={{
-											float: 'right',
-											textAlign: 'right',
-											marginTop: '10px',
-										}}
-									>
-										<CancelButton
-											style={{ display: 'inline-block' }}
-											onClick={this.exitHandler}
-										>
-											Cancel
-										</CancelButton>
-										<Button
-											style={{ display: 'inline-block', marginRight: '0px' }}
-											onClick={this.addClickedHandler}
-										>
-											{this.props.action}
-										</Button>
+											<CancelButton
+												style={{ display: 'inline-block' }}
+												onClick={this.exitHandler}
+											>
+												Cancel
+											</CancelButton>
+											<Button
+												style={{ display: 'inline-block', marginRight: '0px' }}
+												onClick={this.addClickedHandler}
+											>
+												{this.props.action}
+											</Button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</Form>
-				</Modal.Content>
+						</Form>
+					</Modal.Content>
+				</Modal>
 				<ModalAdded
 					hideAddConfirm={this.state.showAdd}
 					hideModal={this.hideModalAdded}
-					name={'Coach edited'}
-					description={'Coach ' + this.state.user_name + ' was added'}
+					name={
+						this.props.name === 'Edit Coach' ? 'Coach edited' : 'Coach creted'
+					}
+					description={
+						this.props.name === 'Edit Coach'
+							? `Coach ${this.state.userName} was edited`
+							: `Coach ${this.state.userName} was created`
+					}
 				/>
 				<ModalDeleted
 					showDelete={this.state.showDelete}
@@ -366,7 +379,7 @@ class ModalAddCoach extends Component {
 						'If you delete coach’s account, all data associated with this profile will permanently deleted.'
 					}
 				/>
-			</Modal>
+			</div>
 		)
 	}
 }

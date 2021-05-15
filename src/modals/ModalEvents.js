@@ -6,118 +6,105 @@ import './ModalEvents.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import axios from 'axios'
 import close_icon from '../assets/close.svg'
+import { Button, CancelButton, DeleteButton } from '../styledComponents'
+import ModalAdded from './ModalAdded'
+import ModalDeleted from './ModalDeleted'
 
 class ModalEvents extends Component {
 	state = {
-		show: false,
-		showdelete: false,
-		clicked: false,
-		titlevalid: true,
-		bodyvalid: true,
-		timevalid: true,
-		datevalid: true,
-		clubvalid: true,
-		locationvalid: true,
-		title: '',
+		showAdded: false,
+		showDeleted: false,
+		name: '',
 		body: '',
 		date: '',
 		time: '',
 		location: '',
-		participants: '',
 		img: '',
-		address: '',
-		invite: [],
+		isOfficial: 'false',
 		clubs: [],
 		club: '',
+		idForDelete: -1,
+	}
+	options = [
+		{
+			key: 1,
+			text: 'true',
+			value: 'true',
+		},
+		{
+			key: 2,
+			text: 'false',
+			value: 'false',
+		},
+	]
+
+	ClubHandler = (e, result) => {
+		this.setState({ club: result.value })
 	}
 
-	EventIsAdedd = () => {
-		this.props.EventAdded(this.state.title)
-	}
-	AddedInClub = () => {
-		this.props.InClub(this.state.club)
+	EventOfficialHandler = (e, result) => {
+		console.log(result.value)
+		this.setState({ isOfficial: result.value })
 	}
 
-	ClubHandler = (data, { value }) => {
-		if (/^[a-zA-Z ]+$/.test(data.target.value)) {
-			this.setState({ clubvalid: true })
-			this.setState({ club: value })
-		} else {
-			this.setState({ clubvalid: false })
-		}
-	}
-
-	TitleHandler = (data) => {
-		if (/^[a-zA-Z0-9-_. ]+$/.test(data.target.value)) {
-			this.setState({ titlevalid: true })
-			this.setState({ title: data.target.value })
-		} else {
-			this.setState({ titlevalid: false })
-		}
+	NameHandler = (data) => {
+		this.setState({ name: data.target.value })
 	}
 
 	BodyHandler = (data) => {
-		if (data.target.value.length !== 0) {
-			this.setState({ bodyvalid: true })
-			this.setState({ body: data.target.value })
-		} else this.setState({ bodyvalid: false })
+		this.setState({ body: data.target.value })
 	}
+
 	DateHandler = (data) => {
-		if (data.target.value.length !== 0) {
-			this.setState({ date: data.target.value })
-			this.setState({ datevalid: true })
-		} else this.setState({ datevalid: false })
+		this.setState({ date: data.target.value })
 	}
 
 	TimeHandler = (data) => {
 		this.setState({ time: data.target.value })
 	}
+
 	LocationHandler = (data) => {
-		if (data.target.value.length !== 0) {
-			this.setState({ location: data.target.value })
-			this.setState({ locationvalid: true })
-		} else this.setState({ locationvalid: false })
-	}
-	ParticipantsHandler = (data) => {
-		this.setState({ participants: data.target.value })
+		this.setState({ location: data.target.value })
 	}
 
-	Results = () => (
-		<div className='event-invite'>
-			<h3> Email address</h3>
-			<input type='email' />
-			<Icon color='grey' name='plus' />
-			<label> Add another</label>
-		</div>
-	)
+	setDefaultValues = () => {
+		this.setState({
+			body: '',
+			date: '',
+			time: '',
+			location: '',
+			is_official: 'false',
+			img: '',
+			address: '',
+			club: '',
+		})
+	}
+
 	addClickedHandler = () => {
+		console.log(this.state.isOfficial)
 		if (
-			this.state.titlevalid &&
-			this.state.datevalid &&
-			this.state.bodyvalid &&
-			this.state.timevalid &&
-			this.state.title.length > 0 &&
+			this.state.name.length > 0 &&
 			this.state.body.length > 0 &&
 			this.state.date.length > 0 &&
 			this.state.time.length > 0
 		) {
 			const token = localStorage.getItem('token')
 
-			if (this.props.NameModalEvents === 'Edit Event') {
+			if (this.props.nameModalEvent === 'Edit Event') {
 				moment(this.state.data).format('yyyy-mm-dd')
-				moment(this.state.time).format('HHMMSS')
-				const url = `http://34.65.176.55:8081/api/event/put/${this.props.eventselected.id}/`
+				const url = `http://localhost:3100/events/editEvent/?id=${this.props.eventToEdit.id}`
 				axios
 					.put(
 						url,
 						{
 							img: this.state.img,
-							name: this.state.title,
-							date: this.state.date,
+							is_official: this.state.isOfficial,
+							name: this.state.name,
+							event_date: this.state.date,
+							event_time: this.state.time,
 							description: this.state.body,
-							time: this.state.time,
 							location: this.state.location,
-							club: this.state.club,
+							club_id: this.state.club,
 						},
 						{
 							headers: {
@@ -126,18 +113,10 @@ class ModalEvents extends Component {
 						}
 					)
 					.then((response) => {
-						this.setState({
-							body: '',
-							date: '',
-							time: '',
-							location: '',
-							participants: '',
-							img: '',
-							address: '',
-							club: '',
-						})
-						this.EventIsAdedd()
-						this.props.hideAddConfirm()
+						this.setState({ showAdded: true })
+						this.setDefaultValues()
+						this.props.getEvents()
+						this.props.handleCloseModal()
 					})
 
 					.catch((error) => {
@@ -145,20 +124,17 @@ class ModalEvents extends Component {
 					})
 			} else {
 				moment(this.state.data).format('yyyy-mm-dd')
-				console.log(this.state.log, 'date')
-				moment(this.state.time).format('HHMMSS')
-				console.log(this.state.log, 'time')
 				axios
 					.post(
-						'http://34.65.176.55:8081/api/event/create/',
+						`http://localhost:3100/events/createEvent`,
 						{
-							img: this.state.img,
-							name: this.state.title,
-							date: this.state.date,
+							name: this.state.name,
+							event_date: this.state.date,
 							description: this.state.body,
-							time: this.state.time,
+							event_time: this.state.time,
 							location: this.state.location,
-							club: this.state.club,
+							club_id: this.state.club,
+							is_official: this.state.isOfficial,
 						},
 						{
 							headers: {
@@ -167,9 +143,10 @@ class ModalEvents extends Component {
 						}
 					)
 					.then((response) => {
-						this.EventIsAdedd()
-						this.AddedInClub()
-						this.props.hideAddConfirm()
+						this.setState({ showAdded: true })
+						this.setDefaultValues()
+						this.props.getEvents()
+						this.props.handleCloseModal()
 					})
 					.catch((error) => {
 						alert(error)
@@ -177,71 +154,59 @@ class ModalEvents extends Component {
 			}
 		}
 	}
-	cancelClickedHandler = () => {
-		this.setState({ titlevalid: true })
-		this.setState({ datevalid: true })
-		this.setState({ timevalid: true })
-		this.setState({ bodyvalid: true })
-	}
-	deleteClickedHandler = () => {
-		this.props.hideDeleteConfirm()
-	}
-
-	inviteHandler = () => {
-		let members = this.state.invite
-		members.push('')
-		this.setState({ invite: members })
-	}
-	Edit = () => {
-		return (
-			<button className='button-delete-event' onClick={this.hideDeleteConfirm}>
-				{' '}
-				Detele
-			</button>
-		)
-	}
 
 	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
 		if (
-			this.props.eventselected !== nextProps.eventselected &&
-			nextProps.eventselected !== null
+			this.props.eventToEdit === nextProps.eventToEdit &&
+			nextProps.eventToEdit !== null
 		) {
-			console.log('this', this.props.eventselected)
-			console.log('next', nextProps.eventselected)
-			moment(this.state.data).format('dd-mm-yyyy')
-			console.log(this.state.club, 'real ')
+			const event_date = nextProps.eventToEdit.event_date
+				.substring(0, nextProps.eventToEdit.event_date.indexOf('T'))
+				.split('-')
+			const date = `${event_date[0]}-${event_date[1]}-${event_date[2]}`
+
+			const event_time = nextProps.eventToEdit.event_date
+				.substring(nextProps.eventToEdit.event_date.indexOf('T') + 1)
+				.split(':')
+			const time = `${event_time[0]}:${event_time[1]}`
+			const isOfficial =
+				nextProps.eventToEdit.is_official === 'T' ? 'true' : 'false'
+
 			this.setState({
-				title: nextProps.eventselected.name,
-				location: nextProps.eventselected.location,
-				body: nextProps.eventselected.description,
-				date: nextProps.eventselected.date,
-				time: nextProps.eventselected.time,
-				club: nextProps.eventselected.club,
+				name: nextProps.eventToEdit.name,
+				location: nextProps.eventToEdit.location,
+				body: nextProps.eventToEdit.description,
+				date: date,
+				time: time,
+				club: nextProps.eventToEdit.club_id,
+				isOfficial: isOfficial,
+				idForDelete: nextProps.eventToEdit.id,
 			})
 		}
 	}
-	componentDidMount() {
-		let url = 'http://34.65.176.55:8081/api/club/clubs/'
+	getClubs = () => {
+		let url = 'http://localhost:3100/clubs/?search=default'
 		const token = localStorage.getItem('token')
 		axios.get(url, { headers: { Authorization: token } }).then((response) => {
-			let club =
+			let clubs =
 				response &&
 				response.data &&
 				response.data.map((item, index) => {
 					return {
-						key: item.id,
-						text: item.name,
-						value: item.name,
+						key: item.club.id,
+						text: item.club.name,
+						value: item.club.id,
 					}
 				})
-			console.log(response.data, 'aaaaa')
-			this.setState({ clubs: club })
-			console.log(this.state.clubs, 'asfuysaf')
+			this.setState({ clubs })
 		})
+	}
+	componentDidMount() {
+		this.getClubs()
 	}
 
 	deleteEvent = () => {
-		const url = `http://34.65.176.55:8081/api/event/delete/${this.props.eventselected.id}/`
+		const url = `http://localhost:3100/events/deleteEvent/?id=${this.state.idForDelete}`
 		axios
 			.delete(url, {
 				headers: {
@@ -250,166 +215,206 @@ class ModalEvents extends Component {
 				},
 			})
 			.then((response) => {
-				this.hideModal()
+				console.log('Deleted')
 			})
 			.catch((error) => {
 				alert(error)
 			})
 	}
-	hideDeleteConfirm = () => {
+	hideModalDelete = () => {
 		this.setState({
-			show: false,
-			showDelete: true,
+			showDeleted: false,
 		})
-		this.deleteEvent()
 	}
+	showModalDelete = () => {
+		this.setState({
+			showDeleted: true,
+		})
+	}
+	hideModalAdded = () => {
+		this.setState({
+			showAdded: false,
+		})
+	}
+
 	render() {
 		return (
-			<Modal
-				className='modal-events'
-				open={this.props.handleOpenModal}
-				close={this.props.handleCloseModal}
-				reciveData={this.props.passData}
-			>
-				<div className='modal-content-div'>
-					<div className='close-icon-events'>
-						<img
-							src={close_icon}
-							alt=''
-							onClick={this.props.handleCloseModal}
-						/>
-					</div>
-					<Form>
-						<div className='buttom-modal-events'>
-							<h2>{this.props.NameModalEvents}</h2>
-							<div className='first-line-events'>
+			<div>
+				<Modal
+					open={this.props.handleOpenModal}
+					close={this.props.handleCloseModal}
+					className='modal-form'
+				>
+					<Modal.Content>
+						<Form>
+							<img
+								src={close_icon}
+								alt=''
+								onClick={this.props.handleCloseModal}
+								className='close-icon-athlete'
+							/>
+							<div>
+								<h2>{this.props.nameModalEvent}</h2>
 								<hr></hr>
-							</div>
-						</div>
-						<div className='form-events'>
-							<Form.Input
-								label='Name'
-								defaultValue={this.state.title}
-								placeholder='Input placeholder'
-								error={
-									this.state.titlevalid
-										? null
-										: 'The field can not be empty or contain some special characters'
-								}
-								onChange={this.TitleHandler}
-							/>
-							<Form.Group widths='equal'>
-								<Form.Input
-									label='Date'
-									type='date'
-									value={this.props.date}
-									placeholder='Input placeholder'
-									error={
-										this.state.datevalid ? null : 'The field can not be empty '
-									}
-									onChange={(newdate) => {
-										this.setState({ date: newdate.target.value })
-									}}
-								/>
-								<Form.Input
-									label='Time'
-									type='time'
-									step='1'
-									placeholder='Input placeholder'
-									defaultValue={this.state.time}
-									onChange={(ev) => {
-										this.setState({ time: ev.target.value })
-									}}
-								/>
-							</Form.Group>
+								<div className='modal-form-inputs'>
+									<Form.Input
+										label='Name'
+										defaultValue={this.state.name}
+										placeholder='name'
+										onChange={this.NameHandler}
+										required
+									/>
+									<Form.Group widths='equal'>
+										<Form.Input
+											required
+											label='Date'
+											type='date'
+											defaultValue={this.state.date}
+											onChange={(newdate) => {
+												console.log(newdate.target.value)
+												this.setState({ date: newdate.target.value })
+											}}
+										/>
+										<Form.Input
+											required
+											label='Time'
+											type='time'
+											step='1'
+											defaultValue={this.state.time}
+											onChange={(ev) => {
+												this.setState({ time: ev.target.value })
+											}}
+										/>
+									</Form.Group>
 
-							<Form.Input
-								defaultValue={this.state.location}
-								placeholder='Input placeholder'
-								className='location-search-input'
-								label='Location'
-								error={
-									this.state.locationvalid
-										? null
-										: 'The field can not be empty or contain some special characters'
-								}
-								onChange={this.LocationHandler}
-							/>
+									<Form.Input
+										required
+										defaultValue={this.state.location}
+										placeholder='location'
+										label='Location'
+										onChange={this.LocationHandler}
+									/>
 
-							<Form.Field
-								control={TextArea}
-								style={{ height: '130px' }}
-								label='Description'
-								defaultValue={this.state.body}
-								placeholder='Input placeholder'
-								error={
-									this.state.bodyvalid ? null : 'The field can not be empty '
-								}
-								onChange={this.BodyHandler}
-							/>
-							<Form.Select
-								required
-								options={this.state.clubs || []}
-								className='input-description'
-								label='Assign to a club'
-								placeholder='Input placeholder'
-								onChange={this.ClubHandler}
-							/>
+									<Form.Field
+										control={TextArea}
+										style={{ height: '130px' }}
+										label='Description'
+										defaultValue={this.state.body}
+										placeholder='description'
+										onChange={this.BodyHandler}
+									/>
+									<Form.Select
+										required
+										options={this.options}
+										label='Official Event'
+										placeholder='is official'
+										onChange={this.EventOfficialHandler}
+										defaultValue={this.state.isOfficial}
+									/>
+									<Form.Select
+										required
+										options={this.state.clubs || []}
+										className='input-description'
+										label='Assign to a club'
+										placeholder='club'
+										onChange={this.ClubHandler}
+										value={this.state.club}
+									/>
 
-							<p className='invite-members-optional'>(Optional)</p>
-							<div>{this.state.clicked ? this.Results() : null}</div>
-							<p className='event-cover'>Event cover</p>
-							<Dropzone onDrop={(files) => console.log(files)}>
-								{({ getRootProps, getInputProps }) => (
-									<div className='container-event'>
-										<div
-											{...getRootProps({
-												className: 'dropzone-event',
-												onDrop: (event) => event.stopPropagation(),
-											})}
-										>
-											<input {...getInputProps()} />
-											<div className='upload-file-event'>
-												<Icon
-													style={{ margin: '3px' }}
-													name='cloud upload'
-													color='black'
-												/>
-												<p>Upload File </p>
+									<div>{this.state.clicked ? this.Results() : null}</div>
+									<p className='event-cover'>Event cover</p>
+									<Dropzone onDrop={(files) => console.log(files)}>
+										{({ getRootProps, getInputProps }) => (
+											<div className='container-event'>
+												<div
+													{...getRootProps({
+														className: 'dropzone-event',
+														onDrop: (event) => event.stopPropagation(),
+													})}
+												>
+													<input {...getInputProps()} />
+													<div className='upload-file-event'>
+														<Icon
+															style={{ margin: '3px' }}
+															name='cloud upload'
+															color='black'
+														/>
+														<p>Upload File </p>
+													</div>
+												</div>
+												<p className='drag-drop-event'>or drag&drop here</p>
 											</div>
-										</div>
-										<p className='drag-drop-event'>or drag&drop here</p>
+										)}
+									</Dropzone>
+									<div className='second-line-athletes'>
+										<hr></hr>
 									</div>
-								)}
-							</Dropzone>
-							<div className='bottom-events-modal'>
-								<hr></hr>
-
-								<div className='buttons-features'>
-									{this.props.NameModalEvents === 'Edit Event' ? (
-										<this.Edit />
-									) : null}
-								</div>
-								<div className='button-add-events'>
-									<button
-										className='button-close-event'
-										onClick={this.props.handleCloseModal}
-										inverted
+									<div className='modal-form-buttons'>
+										{this.props.nameModalEvent === 'Edit Event' ? (
+											<DeleteButton
+												style={{ float: 'left', marginTop: '10px' }}
+												onClick={this.showModalDelete}
+											>
+												Delete
+											</DeleteButton>
+										) : null}
+									</div>
+									<div
+										style={{
+											float: 'right',
+											textAlign: 'right',
+											marginTop: '10px',
+											marginBottom: '20px',
+										}}
 									>
-										Close
-									</button>
-									<button
-										className='button-add-event'
-										onClick={this.addClickedHandler}
-									>
-										ADD
-									</button>
+										<CancelButton
+											style={{ display: 'inline-block' }}
+											onClick={this.props.handleCloseModal}
+										>
+											Close
+										</CancelButton>
+										<Button
+											style={{ display: 'inline-block', marginRight: '0px' }}
+											onClick={this.addClickedHandler}
+										>
+											{this.props.nameModalEvent === 'Edit Event'
+												? 'EDIT'
+												: 'ADD'}
+										</Button>
+									</div>
 								</div>
 							</div>
-						</div>
-					</Form>
-				</div>
-			</Modal>
+						</Form>
+					</Modal.Content>
+				</Modal>
+				<ModalAdded
+					hideAddConfirm={this.state.showAdded}
+					hideModal={this.hideModalAdded}
+					name={
+						this.props.nameModalEvent === 'Create Event'
+							? 'Event Added'
+							: 'Event Edited'
+					}
+					description={
+						this.props.nameModalEvent === 'Create Event'
+							? `Event ${this.state.name} was added`
+							: `Event ${this.state.name} was edited`
+					}
+				/>
+
+				<ModalDeleted
+					showDelete={this.state.showDeleted}
+					itemsHandler={this.props.getEvents}
+					hideModalDeleted={this.hideModalDelete}
+					hideModal={this.props.handleCloseModal}
+					title={'Delete player'}
+					name={this.state.name}
+					confirmDeleteItem={this.deleteEvent}
+					description={
+						'If you delete this club, all data associated with this profile will permanently deleted.'
+					}
+				/>
+			</div>
 		)
 	}
 }

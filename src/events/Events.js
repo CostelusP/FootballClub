@@ -14,44 +14,6 @@ import {
 	PaginationDiv,
 } from '../styledComponents'
 class Events extends Component {
-	events = [
-		{
-			name: 'Iulia Mniu',
-			description: 'aaaaaaaaaaaaaaaaaa',
-			time: '12:00',
-			date: '23.08.1999',
-		},
-		{
-			name: 'Iulia Mniu',
-			description: 'aaaaaaaaaaaaaaaaaa',
-			time: '12:00',
-			date: '23.08.1999',
-		},
-		{
-			name: 'Iulia Mniu',
-			description: 'aaaaaaaaaaaaaaaaaa',
-			time: '12:00',
-			date: '23.08.1999',
-		},
-		{
-			name: 'Iulia Mniu',
-			description: 'aaaaaaaaaaaaaaaaaa',
-			time: '12:00',
-			date: '23.08.1999',
-		},
-		{
-			name: 'Iulia Mniu',
-			description: 'aaaaaaaaaaaaaaaaaa',
-			time: '12:00',
-			date: '23.08.1999',
-		},
-		{
-			name: 'Iulia Mniu',
-			description: 'aaaaaaaaaaaaaaaaaa',
-			time: '12:00',
-			date: '23.08.1999',
-		},
-	]
 	state = {
 		show: false,
 		showDelete: false,
@@ -66,17 +28,14 @@ class Events extends Component {
 		InClub: '',
 	}
 
-	CallPoint = () => {
-		let url = `http://34.65.176.55:8081/api/event/all/events/?page=1&search=${this.state.search}&time=${this.state.time}&limit=10/`
+	getEvents = () => {
+		let url = `http://localhost:3100/events/?page=1&search=${this.state.search}&limit=4`
 		const token = localStorage.getItem('token')
 		axios.get(url, { headers: { Authorization: token } }).then((response) => {
+			console.log(response)
 			this.setState({ events: response.data.events })
 			this.setState({ numberpages: response.data.page_number })
 		})
-	}
-
-	EventIsAdded = (response) => {
-		this.setState({ EventAdded: response })
 	}
 
 	AddedInClub = (response) => {
@@ -87,33 +46,15 @@ class Events extends Component {
 		this.setState({ show: true })
 	}
 
-	// componentDidUpdate(prevProps, prevState) {
-	//   if (prevProps.time !== this.state.time) {
-	//     this.setState({ time: prevProps.time });
-	//     this.CallPoint();
-	//   }
-	// }
-
-	hideModal = () => {
-		this.setState({
-			show: false,
-			showDelete: false,
-			showAdd: false,
-		})
-	}
-
-	hideAddConfirm = () => {
-		this.setState({
-			show: false,
-			showAdd: true,
-		})
-	}
-
-	hideDeleteConfirm = () => {
-		this.setState({
-			show: false,
-			showDelete: true,
-		})
+	componentDidUpdate(prevProps, prevState) {
+		// if (prevProps.time !== this.state.time) {
+		// 	this.setState({ time: prevProps.time })
+		// 	this.getEvents()
+		// }
+		if (prevProps.search !== this.state.search) {
+			this.setState({ search: prevProps.search })
+			this.getEvents()
+		}
 	}
 
 	handleOpenModal = () => {
@@ -158,33 +99,29 @@ class Events extends Component {
 	}
 
 	componentDidMount() {
-		let url = `http://34.65.176.55:8081/api/event/all/events/?page=1&search=${this.state.search}&time=${this.state.time}&limit=10/`
-		const token = localStorage.getItem('token')
-		axios.get(url, { headers: { Authorization: token } }).then((response) => {
-			this.setState({ events: response.data.events })
-			this.setState({ numberpages: response.data.page_number })
-		})
+		this.getEvents()
 	}
 
 	setNumPage = (event, { activePage }) => {
 		this.setState({ page: activePage })
-		let url = `http://34.65.176.55:8081/api/event/all/events/?page=${activePage}&time=${this.state.time}&limit=10/`
+		const search = ''
+		let url = `http://localhost:3100/events/?page=${activePage}&search=${search}&limit=4`
 		const token = localStorage.getItem('token')
 		axios
-			.get(url, {
-				headers: {
-					Authorization: token,
-				},
-			})
+			.get(url, { headers: { Authorization: token } })
 			.then((response) => {
+				console.log(response)
 				this.setState({ events: response.data.events })
 				this.setState({ numberpages: response.data.page_number })
 			})
+			.then((response) => {})
+			.catch((err) => {
+				alert(err)
+			})
 	}
+
 	hadleInput = (date) => {
-		this.setState({ search: date.target.value }, () => {
-			this.CallPoint()
-		})
+		this.setState({ search: date.target.value }, () => {})
 	}
 	render() {
 		return (
@@ -199,9 +136,8 @@ class Events extends Component {
 								icon={{
 									name: 'search',
 									link: true,
-									onClick: this.searchHandler,
 								}}
-								onChange={this.searchStringHandler}
+								onChange={this.hadleInput}
 								placeholder='Search...'
 							/>
 						</GridColumn>
@@ -227,30 +163,36 @@ class Events extends Component {
 					</GridRow>
 
 					<div className='events-component'>
-						{this.events &&
-							this.events.map((event, index) => (
-								<Link
-									to={{
-										pathname: `/event/detail/${event.id}`,
-										state: { eventid: event.id },
-									}}
-									className='style-card-events-link'
-								>
+						{this.state.events &&
+							this.state.events.map((event, index) => {
+								const event_date = event.event_date
+									.substring(0, event.event_date.indexOf('T'))
+									.split('-')
+								const date = `${event_date[2]}.${event_date[1]}.${event_date[0]}`
+								const event_time = event.event_date
+									.substring(event.event_date.indexOf('T') + 1)
+									.split(':')
+								const time = `${event_time[0]}:${event_time[1]}`
+
+								return (
 									<EventsComponent
 										cardId={event.id}
 										title={event.name}
 										body={event.description}
-										time={event.time}
-										date={event.date}
+										time={time}
+										date={date}
 										location={event.location}
+										eventToEdit={event}
+										isOfficial={event.is_official}
+										getEvents={this.getEvents}
+										handleCloseModal={this.handleCloseModal}
 									/>
-								</Link>
-							))}
+								)
+							})}
 					</div>
 				</Grid>
 				<PaginationDiv>
 					<Pagination
-						defaultActivePage={1}
 						totalPages={this.state.numberpages}
 						onPageChange={this.setNumPage}
 						activePage={this.state.page}
@@ -258,48 +200,12 @@ class Events extends Component {
 				</PaginationDiv>
 
 				<ModalEvents
-					NameModalEvents='Add Event'
+					nameModalEvent='Add Event'
+					eventToEdit={null}
 					handleOpenModal={this.state.show}
 					handleCloseModal={this.handleCloseModal}
-					showModal={this.state.show}
-					hideModal={this.hideModal}
-					hideAddConfirm={this.hideAddConfirm}
-					EventAdded={this.EventIsAdded}
-					InClub={this.AddedInClub}
+					getEvents={this.getEvents}
 				/>
-
-				<ModalDeleted
-					hideAddConfirm={this.state.showDelete}
-					hideModal={this.hideModal}
-				/>
-				<ModalAdded
-					hideAddConfirm={this.state.showAdd}
-					hideModal={this.hideModal}
-					name={'Event Added'}
-					description={`Event "${this.state.EventAdded}" was added on "${this.state.InClub}"`}
-				/>
-
-				<div className='events-component'>
-					{this.state.events &&
-						this.state.events.map((event, index) => (
-							<Link
-								to={{
-									pathname: `/event/detail/${event.id}`,
-									state: { eventid: event.id },
-								}}
-								className='style-card-events-link'
-							>
-								<EventsComponent
-									cardId={event.id}
-									title={event.name}
-									body={event.description}
-									time={event.time}
-									date={event.date}
-									location={event.location}
-								/>
-							</Link>
-						))}
-				</div>
 			</PagesContent>
 		)
 	}
