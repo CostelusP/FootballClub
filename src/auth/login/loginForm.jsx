@@ -34,7 +34,7 @@ export function LoginForm(props) {
 		if (response.data && response.data.message === 'User logged in') {
 			const accesToken = jwt(response.data.access_token)
 			const user = accesToken.user.user_name
-			const role = accesToken.user.is_admin ? 'Administrator' : 'Coach'
+			const role = accesToken.user.is_admin === 'T' ? 'Administrator' : 'Coach'
 			localStorage.setItem('token', response.data.access_token)
 			localStorage.setItem('role', role)
 			localStorage.setItem('user', user)

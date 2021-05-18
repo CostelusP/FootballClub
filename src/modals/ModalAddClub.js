@@ -6,6 +6,7 @@ import './ModalAddClub.css'
 import { Button, CancelButton, DeleteButton } from '../styledComponents'
 import ModalAdded from './ModalAdded'
 import ModalDeleted from './ModalDeleted'
+import { FormError } from '../auth/common'
 
 class ModalAddClub extends Component {
 	state = {
@@ -16,6 +17,9 @@ class ModalAddClub extends Component {
 		showAdded: false,
 		showDeleted: false,
 		idForDelete: -1,
+		error: '',
+		coaches: '',
+		coach: '',
 	}
 
 	nameHandler = (e) => {
@@ -24,6 +28,10 @@ class ModalAddClub extends Component {
 		} else {
 			this.setState({ nameValidation: false })
 		}
+	}
+
+	CoachHandler = (e, result) => {
+		this.setState({ coach: result.value })
 	}
 
 	descriptionHandler = (e) => {
@@ -61,6 +69,34 @@ class ModalAddClub extends Component {
 		})
 	}
 
+	getCoaches = () => {
+		let url = `http://localhost:3100/users/getCoaches`
+		const token = localStorage.getItem('token')
+		Axios.get(url, {
+			headers: {
+				Authorization: token,
+			},
+		})
+			.then((response) => {
+				let coaches =
+					response &&
+					response.data &&
+					response.data.map((item, index) => {
+						return {
+							key: item.ID,
+							text: item.USER_NAME,
+							value: item.ID,
+						}
+					})
+				coaches.unshift({ key: 1, value: 1, text: 'No Coach' })
+				console.log(coaches)
+				this.setState({ coaches: coaches })
+			})
+			.catch((err) => {
+				alert(err)
+			})
+	}
+
 	hideModalDeleted = () => {
 		this.setState({
 			showDeleted: false,
@@ -80,13 +116,14 @@ class ModalAddClub extends Component {
 			!!this.state.name &&
 			this.state.descriptionValidation &&
 			!!this.state.description
-		)
-			if (this.props.name === 'Edit Club') {
+		) {
+			if (this.props.nameModalClub === 'Edit Club') {
 				Axios.put(
 					`http://localhost:3100/clubs/editClub/?id=${this.props.clubToEdit.id}`,
 					{
 						name: this.state.name,
 						description: this.state.description,
+						user_id: this.state.coach,
 					},
 					{
 						headers: {
@@ -98,9 +135,10 @@ class ModalAddClub extends Component {
 						this.setState({ showAdded: true })
 						this.props.getClub()
 						this.props.hideModal()
+						this.setDefaultValues()
 					})
 					.catch((error) => {
-						alert(error)
+						this.setState({ error: error.response.data.message })
 					})
 			} else {
 				Axios.post(
@@ -108,6 +146,7 @@ class ModalAddClub extends Component {
 					{
 						name: this.state.name,
 						description: this.state.description,
+						user_id: this.state.coach,
 					},
 					{
 						headers: {
@@ -119,11 +158,13 @@ class ModalAddClub extends Component {
 						this.setState({ showAdded: true })
 						this.props.getClubs()
 						this.props.hideModal()
+						this.setDefaultValues()
 					})
 					.catch((error) => {
-						alert(error)
+						this.setState({ error: error.response.data.message })
 					})
 			}
+		}
 	}
 
 	UNSAFE_componentWillReceiveProps(nextProps, _) {
@@ -132,9 +173,10 @@ class ModalAddClub extends Component {
 			nextProps.clubToEdit !== null
 		) {
 			this.setState({
-				name: nextProps.clubToEdit?.name,
-				description: nextProps.clubToEdit?.description,
-				idForDelete: nextProps.clubToEdit?.id,
+				name: nextProps.clubToEdit.name,
+				description: nextProps.clubToEdit.description,
+				idForDelete: nextProps.clubToEdit.id,
+				coach: nextProps.clubToEdit.user_id,
 			})
 		}
 	}
@@ -147,12 +189,35 @@ class ModalAddClub extends Component {
 			headers: {
 				Authorization: token,
 			},
-		}).then((response) => {
-			console.log(response.data)
-			this.setState({
-				clubs: response.data,
-			})
 		})
+			.then((response) => {
+				this.setState({
+					clubs: response.data,
+				})
+			})
+			.catch((error) => {
+				alert(error)
+			})
+	}
+
+	setDefaultValues = () => {
+		this.setState({
+			name: '',
+			description: '',
+			descriptionValidation: true,
+			nameValidation: true,
+			coach: '',
+		})
+	}
+	componentDidMount() {
+		this.getCoaches()
+	}
+
+	handleCloseModal = () => {
+		if (this.props.nameModalClub === 'Add Club') {
+			this.setDefaultValues()
+		}
+		this.props.hideModal()
 	}
 
 	render() {
@@ -160,7 +225,7 @@ class ModalAddClub extends Component {
 			<div>
 				<Modal
 					open={this.props.showModal}
-					onClose={this.props.hideModal}
+					onClose={this.handleCloseModal}
 					className='modal-form'
 				>
 					<Modal.Content>
@@ -170,13 +235,16 @@ class ModalAddClub extends Component {
 									src={close_icon}
 									alt='add-club'
 									className='close-icon'
-									onClick={this.props.hideModal}
+									onClick={this.handleCloseModal}
 								/>
 							</div>
+							{console.log(this.state.coach)}
 							<div>
-								<h2>{this.props.name}</h2>
+								<h2>{this.props.nameModalClub}</h2>
 								<hr></hr>
-
+								<FormError>
+									{this.state.error ? this.state.error : ''}
+								</FormError>
 								<div className='modal-form-inputs'>
 									<Form.Input
 										required
@@ -206,6 +274,13 @@ class ModalAddClub extends Component {
 										width='16'
 										value={this.state.description}
 									/>
+									<Form.Select
+										options={this.state.coaches}
+										label='Assign to a coach'
+										placeholder='coach'
+										value={this.state.coach}
+										onChange={this.CoachHandler}
+									/>
 									<br />
 									<br />
 									<hr className='second-line'></hr>
@@ -228,7 +303,7 @@ class ModalAddClub extends Component {
 											>
 												<CancelButton
 													style={{ display: 'inline-block' }}
-													onClick={this.props.hideModal}
+													onClick={this.handleCloseModal}
 												>
 													Cancel
 												</CancelButton>
@@ -253,12 +328,12 @@ class ModalAddClub extends Component {
 					hideAddConfirm={this.state.showAdded}
 					hideModal={this.hideModalAdded}
 					name={
-						this.props.nameModalAthletes === 'Create Club'
+						this.props.nameModalClub === 'Add Club'
 							? 'Club Added'
 							: 'Club Edited'
 					}
 					description={
-						this.props.nameModalAthletes === 'Create Club'
+						this.props.nameModalClub === 'Add Club'
 							? `Club ${this.state.name} was added`
 							: `Club ${this.state.name} was edited`
 					}

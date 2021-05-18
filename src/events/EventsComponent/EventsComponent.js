@@ -16,6 +16,7 @@ class EventsComponent extends Component {
 	hideModal = () => {
 		this.setState({ show: false })
 	}
+	typeEvent = this.props.eventType === 'prezent' ? 'PENDING' : this.props.score
 
 	render() {
 		return (
@@ -23,7 +24,16 @@ class EventsComponent extends Component {
 				<Card className='root' onClick={this.showModal}>
 					<Image src={logo} className='events-image' />
 					<div style={{ width: '250px', color: 'black' }}>
-						<div className='score-match'>pending</div>
+						{console.log(this.props.score)}
+						{this.props.eventType === 'prezent' ? (
+							<div className='score-match'>Pending</div>
+						) : null}
+						{this.props.eventType === 'past' ? (
+							<div className='score-match'>{this.props.score}</div>
+						) : null}
+						{this.props.eventType === 'future' ? (
+							<div className='score-match'>Good luck</div>
+						) : null}
 						<h3 className='h3-event-details'>{this.props.title}</h3>
 						<div className='body-events-text'>
 							<p>{this.props.body}</p>

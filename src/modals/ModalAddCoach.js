@@ -22,18 +22,19 @@ class ModalAddCoach extends Component {
 		error: null,
 		userName: '',
 	}
-
+	token = localStorage.getItem('token')
 	hideModalDeleted = () => {
 		this.setState({
 			showDelete: false,
 		})
 	}
+
 	hideModalAdded = () => {
 		this.setState({
 			showAdd: false,
 		})
 	}
-	token = localStorage.getItem('token')
+
 	deleteItem = (deleteReceived) => {
 		if (deleteReceived) {
 			const url = `http://localhost:3100/users/coach/?id=${this.state.idDeleted}`
@@ -44,21 +45,20 @@ class ModalAddCoach extends Component {
 						'Content-Type': 'application/json',
 					},
 				})
-				.then((response) => {
+				.then((_) => {
 					this.hideModal()
 				})
 				.catch((error) => {
+					console.error(error.response.data.message)
 					this.setState({ error: error.response.data.message })
 				})
 		}
 	}
 
 	hideDeleteConfirm = () => {
-		console.log(this.props.personToEdit.id, this.props.personToEdit.user_name)
 		this.setState({
 			idDeleted: this.props.personToEdit.id,
 			nameDeleted: this.props.personToEdit.user_name,
-			show: false,
 			showDelete: true,
 			showAdd: false,
 		})
@@ -307,18 +307,10 @@ class ModalAddCoach extends Component {
 											width='16'
 											defaultValue={this.state.confirm_password}
 										/>
-									) : (
-										''
-									)}
-									<label>Club Assign</label>
-									<Input list='Club' placeholder='Input placeholder' fluid />
-									<datalist id='Club'>
-										<option value='English' />
-										<option value='Chinese' />
-										<option value='Dutch' />
-									</datalist>
+									) : null}
+
 									<br />
-									<br />
+
 									<hr className='second-line'></hr>
 									<div className='modal-form-buttons'>
 										{this.props.editForm ? (
@@ -359,7 +351,7 @@ class ModalAddCoach extends Component {
 					hideAddConfirm={this.state.showAdd}
 					hideModal={this.hideModalAdded}
 					name={
-						this.props.name === 'Edit Coach' ? 'Coach edited' : 'Coach creted'
+						this.props.name === 'Edit Coach' ? 'Coach edited' : 'Coach created'
 					}
 					description={
 						this.props.name === 'Edit Coach'

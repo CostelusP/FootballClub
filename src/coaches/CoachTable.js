@@ -21,7 +21,6 @@ export default class CoachTable extends Component {
 		coaches: [],
 		page: 1,
 		nameDeleted: '',
-		coaches_page: [],
 		idDeleted: -1,
 		delete: false,
 		numberPages: 0,
@@ -58,19 +57,20 @@ export default class CoachTable extends Component {
 					'Content-Type': 'application/json',
 				},
 			})
-				.then((response) => {
+				.then((_) => {
 					this.coachesHandler()
 				})
 				.catch((error) => {
-					alert(error)
+					console.err(error)
+					alert(error.response.data.message)
 				})
 		}
 	}
 
 	deleteHandler = (e, index) => {
 		this.setState({
-			idDeleted: this.state.coaches_page[index].id,
-			nameDeleted: this.state.coaches_page[index].user_name,
+			idDeleted: this.state.coaches[index].coach.id,
+			nameDeleted: this.state.coaches[index].coach.user_name,
 			showDelete: true,
 		})
 		this.deleteItem()
@@ -78,18 +78,18 @@ export default class CoachTable extends Component {
 
 	editHandler = (e, index) => {
 		this.setState({
-			personToEdit: this.state.coaches_page[index],
+			personToEdit: this.state.coaches[index].coach,
 			show: true,
 		})
 	}
 
 	handleSort = (clickedColumn) => () => {
-		const { column, coaches_page, direction } = this.state
+		const { column, coaches, direction } = this.state
 
 		if (column !== clickedColumn) {
 			this.setState({
 				column: clickedColumn,
-				coaches_page: _.sortBy(coaches_page, [clickedColumn]),
+				coaches: _.sortBy(coaches, [clickedColumn]),
 				direction: 'ascending',
 			})
 
@@ -97,7 +97,7 @@ export default class CoachTable extends Component {
 		}
 
 		this.setState({
-			coaches_page: coaches_page.reverse(),
+			coaches: coaches.reverse(),
 			direction: direction === 'ascending' ? 'descending' : 'ascending',
 		})
 	}
@@ -121,7 +121,8 @@ export default class CoachTable extends Component {
 				},
 			}
 		).then((response) => {
-			this.setState({ coaches_page: response.data.coaches })
+			console.log(response)
+			this.setState({ coaches: response.data.coaches })
 			this.setState({ numberPages: response.data.page_number })
 		})
 	}
@@ -138,7 +139,7 @@ export default class CoachTable extends Component {
 				Authorization: this.token,
 			},
 		}).then((response) => {
-			this.setState({ coaches_page: response.data.coaches })
+			this.setState({ coaches: response.data.coaches })
 			this.setState({ numberPages: response.data.page_number })
 		})
 	}
@@ -173,15 +174,16 @@ export default class CoachTable extends Component {
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{this.state.coaches_page.map((coaches, index) => {
+						{this.state.coaches.map((coaches, index) => {
 							return (
 								<Table.Row key={index}>
 									<Table.Cell>
 										<Checkbox className='table-checkbox' />
-										{coaches.user_name}
+										{coaches.coach.user_name}
 									</Table.Cell>
-									<Table.Cell>{coaches.email_address}</Table.Cell>
-									<Table.Cell>{coaches.club}</Table.Cell>
+									<Table.Cell>{coaches.coach.email_address}</Table.Cell>
+									<Table.Cell>{coaches.club.name || '-'}</Table.Cell>
+
 									<Table.Cell>
 										<img
 											alt=''

@@ -38,7 +38,7 @@ const PersonClubThumbnail = (props) => {
 					<Card.Meta className='meta-custom'>
 						{props.position} - {props.age} YEARS
 					</Card.Meta>
-					<Card.Description content>
+					<Card.Description>
 						<GridPlayers>
 							<LineFirstLabel>Date of birth</LineFirstLabel>
 							<LineSecondLabel>{props.date_of_birth}</LineSecondLabel>

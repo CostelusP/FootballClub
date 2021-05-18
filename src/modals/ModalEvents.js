@@ -77,6 +77,7 @@ class ModalEvents extends Component {
 			img: '',
 			address: '',
 			club: '',
+			name: '',
 		})
 	}
 
@@ -86,7 +87,8 @@ class ModalEvents extends Component {
 			this.state.name.length > 0 &&
 			this.state.body.length > 0 &&
 			this.state.date.length > 0 &&
-			this.state.time.length > 0
+			this.state.time.length > 0 &&
+			this.state.location.length > 0
 		) {
 			const token = localStorage.getItem('token')
 
@@ -271,7 +273,6 @@ class ModalEvents extends Component {
 											type='date'
 											defaultValue={this.state.date}
 											onChange={(newdate) => {
-												console.log(newdate.target.value)
 												this.setState({ date: newdate.target.value })
 											}}
 										/>
@@ -310,6 +311,9 @@ class ModalEvents extends Component {
 										placeholder='is official'
 										onChange={this.EventOfficialHandler}
 										defaultValue={this.state.isOfficial}
+										disabled={
+											this.props.nameModalEvent === 'Edit Event' ? true : false
+										}
 									/>
 									<Form.Select
 										required

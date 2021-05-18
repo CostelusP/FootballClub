@@ -3,16 +3,14 @@ import EventsComponent from './EventsComponent/EventsComponent'
 import './Events.css'
 import { Pagination, Input, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import ModalEvents from '../modals/ModalEvents'
-import ModalAdded from '../modals/ModalAdded'
-import ModalDeleted from '../modals/ModalDeleted'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 import {
 	Button,
 	PagesContent,
 	PagesTitle,
 	PaginationDiv,
 } from '../styledComponents'
+
 class Events extends Component {
 	state = {
 		show: false,
@@ -29,7 +27,9 @@ class Events extends Component {
 	}
 
 	getEvents = () => {
-		let url = `http://localhost:3100/events/?page=1&search=${this.state.search}&limit=4`
+		let search = ''
+		if (this.state.search) search = this.state.search
+		let url = `http://localhost:3100/events/?page=1&search=${search}&limit=4&time=${this.state.time}`
 		const token = localStorage.getItem('token')
 		axios.get(url, { headers: { Authorization: token } }).then((response) => {
 			console.log(response)
@@ -60,10 +60,10 @@ class Events extends Component {
 	presshandleOngoing = () => {
 		this.setState(
 			{
-				time: 1,
+				time: 'prezent',
 			},
 			() => {
-				this.CallPoint()
+				this.getEvents()
 			}
 		)
 	}
@@ -71,10 +71,10 @@ class Events extends Component {
 	presshandlePast = () => {
 		this.setState(
 			{
-				time: 3,
+				time: 'past',
 			},
 			() => {
-				this.CallPoint()
+				this.getEvents()
 			}
 		)
 	}
@@ -82,10 +82,10 @@ class Events extends Component {
 	presshandleFuture = () => {
 		this.setState(
 			{
-				time: 2,
+				time: 'future',
 			},
 			() => {
-				this.CallPoint()
+				this.getEvents()
 			}
 		)
 	}
@@ -97,7 +97,7 @@ class Events extends Component {
 	setNumPage = (event, { activePage }) => {
 		this.setState({ page: activePage })
 		const search = ''
-		let url = `http://localhost:3100/events/?page=${activePage}&search=${search}&limit=4`
+		let url = `http://localhost:3100/events/?page=${activePage}&search=${search}&limit=4&time=${this.state.time}`
 		const token = localStorage.getItem('token')
 		axios
 			.get(url, { headers: { Authorization: token } })
@@ -178,8 +178,10 @@ class Events extends Component {
 											location={event.location}
 											eventToEdit={event}
 											isOfficial={event.is_official}
+											score={event.score}
 											getEvents={this.getEvents}
 											handleCloseModal={this.handleCloseModal}
+											eventType={this.state.time}
 										/>
 									)
 								})}
@@ -194,7 +196,7 @@ class Events extends Component {
 					</PaginationDiv>
 				</PagesContent>
 				<ModalEvents
-					nameModalEvent='Add Event'
+					nameModalEvent='Create Event'
 					eventToEdit={null}
 					handleOpenModal={this.state.show}
 					handleCloseModal={this.handleCloseModal}

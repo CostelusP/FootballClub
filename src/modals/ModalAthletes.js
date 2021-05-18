@@ -8,6 +8,7 @@ import { Button, CancelButton, DeleteButton } from '../styledComponents'
 import { date } from 'yup'
 import ModalAdded from '../modals/ModalAdded'
 import ModalDeleted from './ModalDeleted'
+import jwt from 'jwt-decode'
 
 class ModalAthletes extends Component {
 	state = {
@@ -34,6 +35,7 @@ class ModalAthletes extends Component {
 		idForDelete: -1,
 	}
 
+	role = localStorage.getItem('role')
 	NameHandler = (data) => {
 		if (/^[a-zA-Z ]+$/.test(data.target.value)) {
 			this.setState({ namevalid: true })
@@ -137,6 +139,22 @@ class ModalAthletes extends Component {
 	}
 
 	componentDidMount() {
+		if (this.role === 'Coach') {
+			const token = localStorage.getItem('token')
+			const decoded = jwt(token)
+			const userId = decoded.user.id
+			let url = `http://localhost:3100/clubs/getClubByUser/?id=${userId}`
+			axios.get(url, { headers: { Authorization: token } }).then((response) => {
+				let club = response &&
+					response.data && {
+						key: response.data.id,
+						text: response.data.name,
+						value: response.data.id,
+					}
+
+				this.setState({ club: club.key })
+			})
+		}
 		this.getClubs()
 	}
 
@@ -245,8 +263,6 @@ class ModalAthletes extends Component {
 	}
 
 	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
-		console.log('brbrb', nextProps)
-		console.log(this.props.playerToEdit !== nextProps.playerToEdit)
 		if (
 			this.props.playerToEdit !== nextProps.playerToEdit &&
 			nextProps.playerToEdit !== null
@@ -296,7 +312,6 @@ class ModalAthletes extends Component {
 				>
 					<Modal.Content>
 						<Form>
-							{console.log(this.props.playerToEdit)}
 							<img
 								src={close_icon}
 								className='close-icon-athlete'
@@ -405,10 +420,10 @@ class ModalAthletes extends Component {
 										</Form.Group>
 										<Form.Select
 											options={this.state.clubs || []}
-											className='input-description'
 											label='Assign to a club'
 											placeholder='clubs'
 											value={this.state.club}
+											disabled={this.role === 'Coach' ? true : false}
 											onChange={this.ClubHandler}
 										/>
 										<h3>Avatar Image</h3>
@@ -482,7 +497,7 @@ class ModalAthletes extends Component {
 				</Modal>
 				<ModalAdded
 					hideAddConfirm={this.state.showAdded}
-					hideModal={this.hideModal}
+					hideModal={this.hideModalAdded}
 					name={
 						this.props.nameModalAthletes === 'Create Player'
 							? 'Player Added'

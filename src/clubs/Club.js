@@ -11,9 +11,11 @@ import { Button, PagesContent, PagesTitle } from '../styledComponents'
 class Club extends Component {
 	state = {
 		show: false,
-		clubs: [],
+		clubs: [{ club: {}, coach: {}, players: [] }],
 		search: '',
 	}
+
+	role = localStorage.getItem('role')
 
 	showModal = () => {
 		this.setState({ show: true })
@@ -40,6 +42,20 @@ class Club extends Component {
 				this.setState({
 					clubs: response.data,
 				})
+				for (let i = 0; i < this.state.clubs.length; i++) {
+					let url = `http://localhost:3100/players/playersByClubId/?clubId=${this.state.clubs[i].club.id}`
+					axios
+						.get(url, {
+							headers: {
+								Authorization: token,
+							},
+						})
+						.then((response) => {
+							const clubsA = this.state.clubs
+							clubsA[i].players = response.data
+							this.setState({ clubs: clubsA })
+						})
+				}
 			})
 	}
 
@@ -73,14 +89,19 @@ class Club extends Component {
 								/>
 							</GridColumn>
 							<GridColumn floated='right' align='right' computer='8' tablet='8'>
-								<Button onClick={this.showModal}>ADD NEW</Button>
+								<Button
+									onClick={this.showModal}
+									disabled={this.role === 'Coach' ? true : false}
+								>
+									ADD NEW
+								</Button>
 							</GridColumn>
 						</GridRow>
 					</Grid>
 					<ModalAddClub
 						showModal={this.state.show}
 						hideModal={this.hideModal}
-						name={'Add Club'}
+						nameModalClub={'Add Club'}
 						action={'ADD'}
 						getClubs={this.getClubs}
 					/>
@@ -93,6 +114,7 @@ class Club extends Component {
 										name={club.club.name}
 										description={club.club.description}
 										coach={club.coach.user_name || '-'}
+										nrPlayers={club.players?.length || 0}
 										className='grid-item'
 										number={3}
 										id={club.club.id}

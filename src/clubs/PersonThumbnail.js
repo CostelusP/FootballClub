@@ -42,7 +42,7 @@ class PersonThumbnail extends Component {
 								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
 									<LineFirstLabel>Height</LineFirstLabel>
 									<LineSecondLabel style={{ marginLeft: '99px' }}>
-										{this.props.height} m
+										{this.props.height} cm
 									</LineSecondLabel>
 								</GridPlayers>
 								<GridPlayers style={{ margin: '0 auto', width: '60%' }}>
