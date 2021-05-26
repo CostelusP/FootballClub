@@ -63,7 +63,7 @@ class Athletes extends Component {
 		}
 	}
 
-	setNumPage = (event, { activePage }) => {
+	setNumPage = (_, { activePage }) => {
 		const role = localStorage.getItem('role')
 		const token = localStorage.getItem('token')
 		const decoded = jwt(token)

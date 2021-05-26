@@ -11,7 +11,8 @@ import { Button, PagesContent, PagesTitle } from '../styledComponents'
 class Club extends Component {
 	state = {
 		show: false,
-		clubs: [{ club: {}, coach: {}, players: [] }],
+		clubs: [{ club: {}, coach: {} }],
+		noPlayers: [],
 		search: '',
 	}
 
@@ -42,20 +43,17 @@ class Club extends Component {
 				this.setState({
 					clubs: response.data,
 				})
-				for (let i = 0; i < this.state.clubs.length; i++) {
-					let url = `http://localhost:3100/players/playersByClubId/?clubId=${this.state.clubs[i].club.id}`
-					axios
-						.get(url, {
-							headers: {
-								Authorization: token,
-							},
-						})
-						.then((response) => {
-							const clubsA = this.state.clubs
-							clubsA[i].players = response.data
-							this.setState({ clubs: clubsA })
-						})
-				}
+				let url = `http://localhost:3100/players/playersByClubId/?clubId=${'a'}`
+				axios
+					.get(url, {
+						headers: {
+							Authorization: token,
+						},
+					})
+					.then((response) => {
+						this.setState({ noPlayers: response.data })
+						console.log(this.state.noPlayers)
+					})
 			})
 	}
 
@@ -107,20 +105,30 @@ class Club extends Component {
 					/>
 					<div className='grid-container'>
 						{this.state.clubs &&
-							this.state.clubs.map((club, _) => (
-								<Link to={`/clubs/${club.club.id}`} className='linkStyle'>
-									<ClubThumbnail
-										key={club.club.id + '-club_person'}
-										name={club.club.name}
-										description={club.club.description}
-										coach={club.coach.user_name || '-'}
-										nrPlayers={club.players?.length || 0}
-										className='grid-item'
-										number={3}
-										id={club.club.id}
-									/>
-								</Link>
-							))}
+							this.state.clubs.map((club, _) => {
+								const players = this.state.noPlayers.find(
+									(player) => player[1] === club.club.id
+								)
+								let noPlayers = 0
+								if (players) {
+									noPlayers = players[0]
+								}
+
+								return (
+									<Link to={`/clubs/${club.club.id}`} className='linkStyle'>
+										<ClubThumbnail
+											key={club.club.id + '-club_person'}
+											name={club.club.name}
+											description={club.club.description}
+											coach={club.coach.user_name || '-'}
+											nrPlayers={noPlayers}
+											className='grid-item'
+											number={3}
+											id={club.club.id}
+										/>
+									</Link>
+								)
+							})}
 					</div>
 				</div>
 			</PagesContent>

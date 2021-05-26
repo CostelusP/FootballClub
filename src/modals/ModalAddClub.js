@@ -18,8 +18,9 @@ class ModalAddClub extends Component {
 		showDeleted: false,
 		idForDelete: -1,
 		error: '',
-		coaches: '',
+		coaches: [],
 		coach: '',
+		clubs: [],
 	}
 
 	nameHandler = (e) => {
@@ -70,27 +71,42 @@ class ModalAddClub extends Component {
 	}
 
 	getCoaches = () => {
-		let url = `http://localhost:3100/users/getCoaches`
 		const token = localStorage.getItem('token')
+
+		const url = `http://localhost:3100/users/getCoaches`
 		Axios.get(url, {
 			headers: {
 				Authorization: token,
 			},
 		})
 			.then((response) => {
+				console.log('clubs', this.state.clubs)
 				let coaches =
 					response &&
 					response.data &&
-					response.data.map((item, index) => {
+					response.data.map((item, _) => {
 						return {
 							key: item.ID,
 							text: item.USER_NAME,
 							value: item.ID,
 						}
 					})
+				let final = []
+				for (let i = 0; i < coaches.length; i++) {
+					console.log(
+						!this.state.clubs.find(
+							(element) => element.club.user_id === coaches[i].key
+						)
+					)
+					if (
+						!this.state.clubs.find(
+							(element) => element.club.user_id === coaches[i].key
+						)
+					)
+						final.push(coaches[i])
+				}
 				coaches.unshift({ key: 1, value: 1, text: 'No Coach' })
-				console.log(coaches)
-				this.setState({ coaches: coaches })
+				this.setState({ coaches: final })
 			})
 			.catch((err) => {
 				alert(err)
@@ -172,6 +188,7 @@ class ModalAddClub extends Component {
 			this.props.clubToEdit !== nextProps.clubToEdit &&
 			nextProps.clubToEdit !== null
 		) {
+			console.log(nextProps.clubToEdit)
 			this.setState({
 				name: nextProps.clubToEdit.name,
 				description: nextProps.clubToEdit.description,
@@ -209,8 +226,24 @@ class ModalAddClub extends Component {
 			coach: '',
 		})
 	}
-	componentDidMount() {
-		this.getCoaches()
+	async componentDidMount() {
+		let url = `http://localhost:3100/clubs/?search=`
+		const token = localStorage.getItem('token')
+		await Axios.get(url, {
+			headers: {
+				Authorization: token,
+			},
+		})
+			.then((response) => {
+				console.log(response)
+				this.setState({
+					clubs: response.data,
+				})
+			})
+			.catch((error) => {
+				alert(error)
+			})
+		await this.getCoaches()
 	}
 
 	handleCloseModal = () => {
@@ -238,7 +271,6 @@ class ModalAddClub extends Component {
 									onClick={this.handleCloseModal}
 								/>
 							</div>
-							{console.log(this.state.coach)}
 							<div>
 								<h2>{this.props.nameModalClub}</h2>
 								<hr></hr>
@@ -275,7 +307,7 @@ class ModalAddClub extends Component {
 										value={this.state.description}
 									/>
 									<Form.Select
-										options={this.state.coaches}
+										options={this.state.coaches || []}
 										label='Assign to a coach'
 										placeholder='coach'
 										value={this.state.coach}
