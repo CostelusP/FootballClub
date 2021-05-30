@@ -36,7 +36,7 @@ class ModalAddClub extends Component {
 	}
 
 	descriptionHandler = (e) => {
-		if (e.target.value !== '' && e.target.value.length <= 16) {
+		if (e.target.value !== '' && e.target.value.length <= 40) {
 			this.setState({
 				description: e.target.value,
 				descriptionValidation: true,
@@ -298,7 +298,7 @@ class ModalAddClub extends Component {
 										error={
 											this.state.descriptionValidation
 												? null
-												: 'The field can not be empty or contain more than 10 characters'
+												: 'The field can not be empty or contain more than 40 characters'
 										}
 										fluid
 										label='Description'
