@@ -10,6 +10,7 @@ import {
 	PagesTitle,
 	PaginationDiv,
 } from '../styledComponents'
+import jwt from 'jwt-decode'
 
 class Athletes extends Component {
 	state = {
@@ -17,7 +18,7 @@ class Athletes extends Component {
 		players: [],
 		page: 1,
 		numberpages: 0,
-		search: '',
+		search: 'default',
 	}
 
 	showModal = () => {
@@ -31,8 +32,11 @@ class Athletes extends Component {
 	}
 
 	playersHandler = () => {
-		let url = `http://localhost:3100/players/?page=1&search=default&limit=12`
+		const role = localStorage.getItem('role')
 		const token = localStorage.getItem('token')
+		const decoded = jwt(token)
+		const userId = decoded.user.id
+		let url = `http://localhost:3100/players/?page=1&search=default&limit=12&role=${role}&userId=${userId}`
 		axios.get(url, { headers: { Authorization: token } }).then((response) => {
 			this.setState({ players: response.data.players })
 			this.setState({ numberpages: response.data.page_number })
@@ -44,10 +48,14 @@ class Athletes extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
+		const role = localStorage.getItem('role')
+		const token = localStorage.getItem('token')
+		const decoded = jwt(token)
+		const userId = decoded.user.id
 		if (prevProps.search !== this.state.search) {
 			this.setState({ search: prevProps.search })
-			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12&clubId=null&isFrom=null`
-			const token = localStorage.getItem('token')
+			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12&clubId=null&isFrom=null&role=${role}&userId=${userId}`
+
 			axios.get(url).then((response) => {
 				this.setState({ players: response.data.players })
 				this.setState({ numberpages: response.data.page_number })
@@ -55,10 +63,13 @@ class Athletes extends Component {
 		}
 	}
 
-	setNumPage = (event, { activePage }) => {
-		this.setState({ page: activePage })
-		let url = `http://localhost:3100/players/?page=${activePage}&search=default&limit=12&clubId=null&isFrom=null`
+	setNumPage = (_, { activePage }) => {
+		const role = localStorage.getItem('role')
 		const token = localStorage.getItem('token')
+		const decoded = jwt(token)
+		const userId = decoded.user.id
+		this.setState({ page: activePage })
+		let url = `http://localhost:3100/players/?page=${activePage}&search=default&limit=12&clubId=null&isFrom=null&role=${role}&userId=${userId}`
 		axios
 			.get(url, {
 				headers: {

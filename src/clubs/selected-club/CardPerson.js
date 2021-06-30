@@ -25,7 +25,7 @@ const PersonClubThumbnail = (props) => {
 		return setShow(!show)
 	}
 	return (
-		<div className='person-club-card'>
+		<div>
 			<Card className='card-width' onClick={setShowModalOrCard}>
 				<Card.Content>
 					<Image
@@ -38,7 +38,7 @@ const PersonClubThumbnail = (props) => {
 					<Card.Meta className='meta-custom'>
 						{props.position} - {props.age} YEARS
 					</Card.Meta>
-					<Card.Description content>
+					<Card.Description>
 						<GridPlayers>
 							<LineFirstLabel>Date of birth</LineFirstLabel>
 							<LineSecondLabel>{props.date_of_birth}</LineSecondLabel>

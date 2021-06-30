@@ -1,41 +1,7 @@
-.modal-events {
-  position: absolute;
 
-  min-height: 1050px;
-  background: #ffffff;
-  border: 1px solid #8e9296;
-  box-sizing: border-box;
-  border-radius: 8px;
-  max-width: 560px !important;
-}
 
-.modal-content-div {
-  position: absolute;
-  width: 560px;
-  height: 650px;
-}
-.buttom-modal-events {
-  margin-left: 44px;
-  margin-right: 44px;
-  margin-top: 60px;
-}
-.buttom-modal-events h2 {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 32px;
-  text-transform: capitalize;
-  color: #000000;
-}
-.first-line-events {
-  left: 44px;
-  right: 44px;
-  top: 30px;
-}
-.first-line-events hr {
-  border: 1px solid #cad2e2;
-}
-.form-events {
+
+/* .form-events {
   margin-top: 50px;
   margin-left: 44px;
   margin-right: 44px;
@@ -47,91 +13,13 @@
 
 .input-time {
   width: 180px !important;
-}
+} */
 
-.input-content-calendar {
+/* .input-content-calendar {
   display: inline-flex;
   width: 190px;
   left: 20px;
-}
-
-.bottom-events-modal {
-  margin-top: 70px;
-}
-.bottom-events-modal hr {
-  border: 1px solid #cad2e2;
-}
-.button-add-events {
-  float: right;
-  display: flex;
-  margin-top: 60px;
-}
-.button-add-event:hover {
-  border-radius: 8px;
-  transform: translate(0.2);
-}
-.button-add-event:focus {
-  outline: 0;
-  border-radius: 8px;
-}
-.button-add-event:active {
-  transform: translateY(1px);
-  box-shadow: 0 5px #666;
-}
-
-.button-close-event {
-  cursor: pointer;
-  margin: 5px;
-  width: 90px;
-  height: 40px;
-  background: #f5f5f7;
-  border-radius: 8px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: black;
-  border: none;
-}
-.button-close-event:hover {
-  border-radius: 8px;
-  transform: translate(0.2);
-}
-.button-close-event:focus {
-  outline: 0;
-  border-radius: 8px;
-}
-.button-close-event:active {
-  transform: translateY(1px);
-  box-shadow: 0 5px #666;
-}
-.button-add-event {
-  cursor: pointer;
-  width: 130px;
-  height: 40px;
-  background: #1a1a1a;
-  border-radius: 8px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #44dabd;
-  border: none;
-  margin: 5px;
-}
-.button-add-event:focus {
-  border-radius: 8px;
-  outline: 0;
-}
-
-.button-close-event:focus {
-  border-radius: 8px;
-  outline: 0;
-}
+} */
 
 .container-event {
   position: relative;
@@ -177,87 +65,9 @@
   color: #000000;
   top: 30px;
 }
-.invite-members {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #000000;
-  border-bottom: solid 2px #c3c7cc;
-  width: 126px;
-  margin: 2px;
-  cursor: pointer;
-  display: flex;
-}
-.invite-members-optional {
-  display: inline-flex;
-  margin: 2px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  color: #8e9296;
-}
+
 .drag-drop-event {
   margin-left: 85px !important;
   margin-top: 18px !important;
 }
 
-.event-invite {
-  margin-top: 20px;
-}
-.invite-optional {
-  display: inline-block;
-}
-
-.event-invite h3 {
-  font-size: 0.92857143em;
-  font-weight: 700;
-  text-transform: none;
-  margin-bottom: 5px;
-}
-
-.close-icon-events {
-  float: right;
-  margin-right: 15px;
-  margin-top: 15px;
-  top: 5px;
-  cursor: pointer;
-}
-.buttons-features {
-  width: 100px;
-  margin-left: 0px;
-  display: inline-flex;
-  margin-top: 60px;
-}
-.button-delete-event {
-  cursor: pointer;
-  margin: 5px;
-  margin-left: 0px;
-  width: 90px;
-  height: 40px;
-  background: white;
-  border-radius: 8px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #44dabd;
-  border: none;
-}
-.button-delete-event:hover {
-  border-radius: 8px;
-  transform: translate(0.2);
-}
-.button-delete-event:focus {
-  outline: 0;
-  border-radius: 8px;
-}
-.button-delete-event:active {
-  transform: translateY(1px);
-  box-shadow: 0 5px rgb(238, 235, 235);
-}

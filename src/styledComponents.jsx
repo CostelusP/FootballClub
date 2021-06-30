@@ -13,13 +13,16 @@ const LogOutDiv = styled.div`
 	overflow: hidden;
 	display: inline-block;
 	margin-left: 5px;
-	margin-bottom: 3px;
+	margin-top: 2px;
 `
 const LogOut = styled.div`
 	position: absolute;
 	bottom: 60px;
 	display: flex;
+	width: 50%;
+	margin-left: 25%;
 	justify-content: center;
+	margin-right: 25%;
 	cursor: pointer;
 `
 const PagesTitle = styled.h2`

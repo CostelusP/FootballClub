@@ -17,9 +17,9 @@ class SelectedClub extends Component {
 		numberPages: 0,
 		search: '',
 	}
-
+	role = localStorage.getItem('role')
 	showModal = () => {
-		this.setState({ show: true })
+		if (this.role === 'Administrator') this.setState({ show: true })
 	}
 
 	hideModal = () => {
@@ -70,7 +70,6 @@ class SelectedClub extends Component {
 		const id = id_array[2]
 		if (prevProps.search !== this.state.search) {
 			this.setState({ search: prevProps.search })
-			console.log(this.state.search)
 			let url = `http://localhost:3100/players/?page=1&search=${this.state.search}&limit=12&clubId=${id}&isFrom=Club`
 			const token = localStorage.getItem('token')
 			axios.get(url, { headers: { Authorization: token } }).then((response) => {
@@ -144,7 +143,7 @@ class SelectedClub extends Component {
 				<ModalAddClub
 					showModal={this.state.show}
 					hideModal={this.hideModal}
-					name={'Edit Club'}
+					nameModalClub={'Edit Club'}
 					action={'EDIT'}
 					clubToEdit={this.state.club.club}
 					getClub={this.getClub}

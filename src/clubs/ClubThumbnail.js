@@ -17,7 +17,9 @@ const ClubThumbnail = (props) => {
 			<div style={{ display: 'flex' }}>
 				<GroupAvatars number={props.number} />
 				{a > 4 ? (
-					<label style={{ marginTop: '15px', marginLeft: '5px' }}>+{a}</label>
+					<label style={{ marginTop: '15px', marginLeft: '5px' }}>
+						+{props.nrPlayers}
+					</label>
 				) : null}
 			</div>
 			<GridPlayers style={{ marginTop: '20px' }}>

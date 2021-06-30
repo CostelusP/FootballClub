@@ -11,9 +11,12 @@ import { Button, PagesContent, PagesTitle } from '../styledComponents'
 class Club extends Component {
 	state = {
 		show: false,
-		clubs: [],
+		clubs: [{ club: {}, coach: {} }],
+		noPlayers: [],
 		search: '',
 	}
+
+	role = localStorage.getItem('role')
 
 	showModal = () => {
 		this.setState({ show: true })
@@ -40,6 +43,17 @@ class Club extends Component {
 				this.setState({
 					clubs: response.data,
 				})
+				let url = `http://localhost:3100/players/playersByClubId/?clubId=${'a'}`
+				axios
+					.get(url, {
+						headers: {
+							Authorization: token,
+						},
+					})
+					.then((response) => {
+						this.setState({ noPlayers: response.data })
+						console.log(this.state.noPlayers)
+					})
 			})
 	}
 
@@ -73,32 +87,48 @@ class Club extends Component {
 								/>
 							</GridColumn>
 							<GridColumn floated='right' align='right' computer='8' tablet='8'>
-								<Button onClick={this.showModal}>ADD NEW</Button>
+								<Button
+									onClick={this.showModal}
+									disabled={this.role === 'Coach' ? true : false}
+								>
+									ADD NEW
+								</Button>
 							</GridColumn>
 						</GridRow>
 					</Grid>
 					<ModalAddClub
 						showModal={this.state.show}
 						hideModal={this.hideModal}
-						name={'Add Club'}
+						nameModalClub={'Add Club'}
 						action={'ADD'}
 						getClubs={this.getClubs}
 					/>
 					<div className='grid-container'>
 						{this.state.clubs &&
-							this.state.clubs.map((club, _) => (
-								<Link to={`/clubs/${club.club.id}`} className='linkStyle'>
-									<ClubThumbnail
-										key={club.club.id + '-club_person'}
-										name={club.club.name}
-										description={club.club.description}
-										coach={club.coach.user_name || '-'}
-										className='grid-item'
-										number={3}
-										id={club.club.id}
-									/>
-								</Link>
-							))}
+							this.state.clubs.map((club, _) => {
+								const players = this.state.noPlayers.find(
+									(player) => player[1] === club.club.id
+								)
+								let noPlayers = 0
+								if (players) {
+									noPlayers = players[0]
+								}
+
+								return (
+									<Link to={`/clubs/${club.club.id}`} className='linkStyle'>
+										<ClubThumbnail
+											key={club.club.id + '-club_person'}
+											name={club.club.name}
+											description={club.club.description}
+											coach={club.coach.user_name || '-'}
+											nrPlayers={noPlayers}
+											className='grid-item'
+											number={3}
+											id={club.club.id}
+										/>
+									</Link>
+								)
+							})}
 					</div>
 				</div>
 			</PagesContent>

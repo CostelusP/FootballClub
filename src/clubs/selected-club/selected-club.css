@@ -28,6 +28,7 @@
 }
 .card-width {
   min-width: 295px;
+  margin:10px !important;
 }
 
 
